@@ -1,0 +1,246 @@
+.order-management {
+    padding: 20px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.om-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-btn {
+    border: none;
+    background: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 500;
+}
+
+.orders-container {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 180px);
+    /* Adjust based on header height */
+}
+
+.orders-list {
+    flex: 2;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+    background: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-shipped {
+    background: #e0e7ff;
+    color: #4f46e5;
+}
+
+.status-delivered {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.selected-row {
+    background: #f8fafc;
+}
+
+/* Order Details Panel */
+.order-details-panel {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-info-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-block h4 {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.info-block p {
+    font-size: 0.95rem;
+    margin: 4px 0;
+    color: #1e293b;
+}
+
+.order-items-list {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.order-summary {
+    margin-top: 15px;
+    border-top: 2px solid #e2e8f0;
+    padding-top: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    color: #64748b;
+}
+
+.summary-row.total {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.status-control h4 {
+    margin-bottom: 10px;
+}
+
+.status-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.status-action-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.status-action-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.status-action-btn.processing:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.status-action-btn.shipped:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+}
+
+.status-action-btn.delivered:hover {
+    border-color: #16a34a;
+    color: #16a34a;
+}
+
+.status-action-btn.cancelled:hover {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+.status-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f1f5f9;
+}
