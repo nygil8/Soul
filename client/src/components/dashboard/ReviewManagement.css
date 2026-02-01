@@ -1,0 +1,80 @@
+.review-management {
+    padding: 20px;
+    color: var(--text-dark);
+}
+
+.rm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.reviews-list-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.reviews-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reviews-table th,
+.reviews-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.reviews-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.comment-cell {
+    max-width: 300px;
+    color: #475569;
+}
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-pill.visible {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-pill.hidden {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.review-hidden {
+    opacity: 0.6;
+    background: #f8fafc;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #94a3b8;
+    gap: 15px;
+}
