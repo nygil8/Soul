@@ -1,19 +1,42 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import Login from './components/Login';
-import PrivateRoute from './components/PrivateRoute';
-import Overview from './components/Overview';
-import OrderManagement from './components/dashboard/OrderManagement';
-import ProductManagement from './components/dashboard/ProductManagement';
-import CustomerManagement from './components/dashboard/CustomerManagement';
-import ReviewManagement from './components/dashboard/ReviewManagement';
-import Profile from './components/Profile';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+/* USER */
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import UserLogin from "./pages/auth/Login";
+import UserRegister from "./pages/auth/Register";
+import MyAccount from "./pages/account/MyAccount";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+
+/* ADMIN */
+import Dashboard from "./components/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
+import Overview from "./components/Overview";
+import OrderManagement from "./components/dashboard/OrderManagement";
+import ProductManagement from "./components/dashboard/ProductManagement";
+import CustomerManagement from "./components/dashboard/CustomerManagement";
+import ReviewManagement from "./components/dashboard/ReviewManagement";
+import Profile from "./components/Profile";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* USER  */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<UserLogin />} />
+        <Route path="/register" element={<UserRegister />} />
+        <Route path="/my-account" element={<MyAccount />} />
+        <Route path="/shipping-policy" element={<ShippingPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+
+        {/* ADMIN */}
         <Route
           path="/dashboard"
           element={
@@ -29,10 +52,9 @@ function App() {
           <Route path="reviews" element={<ReviewManagement />} />
           <Route path="profile" element={<Profile />} />
         </Route>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
