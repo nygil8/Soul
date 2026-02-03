@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 
@@ -46,8 +47,13 @@ const staggerSoft = {
   },
 };
 
-/* HOME */
 const Home = () => {
+  const scrollToCategories = () => {
+    document
+      .getElementById("categories")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="bg-[#f7f1e8] text-[#2b2b2b] overflow-x-hidden">
       <Navbar />
@@ -58,7 +64,7 @@ const Home = () => {
           variants={staggerSoft}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
+          viewport={{ once: true }}
           className="space-y-6"
         >
           <motion.h1
@@ -76,10 +82,11 @@ const Home = () => {
             for your little ones.
           </motion.p>
 
+          {/* SHOP NOW → SCROLL */}
           <motion.button
             variants={smoothFadeUp}
-            whileHover={{ scale: 1.05 }}
-            className="bg-[#c6ab9a] px-8 py-3 rounded-full text-sm"
+            onClick={scrollToCategories}
+            className="bg-[#c6ab9a] px-8 py-3 rounded-full text-sm hover:scale-105 transition"
           >
             Shop Now →
           </motion.button>
@@ -96,15 +103,18 @@ const Home = () => {
         />
       </section>
 
-      {/* PRODUCTS */}
-      <section className="px-8 md:px-24 py-24 bg-[#f3ecdf]">
+      {/* CATEGORIES */}
+      <section
+        id="categories"
+        className="px-8 md:px-24 py-24 bg-[#f3ecdf]"
+      >
         <motion.h2
           variants={smoothFadeUp}
           initial="hidden"
           whileInView="visible"
           className="text-center text-3xl font-serif mb-16"
         >
-          All Products
+          Shop by Category
         </motion.h2>
 
         <motion.div
@@ -113,7 +123,12 @@ const Home = () => {
           whileInView="visible"
           className="grid grid-cols-2 md:grid-cols-4 gap-10"
         >
-          {[product1, product2, product3, product4].map((img, i) => (
+          {[
+            { img: product1, link: "/boys", label: "boys" },
+            { img: product2, link: "/girls", label: "girls" },
+            { img: product3, link: "/shoes", label: "Shoes" },
+            { img: product4, link: "/accessories", label: "Accessories" },
+          ].map((item, i) => (
             <motion.div
               key={i}
               variants={smoothFadeUp}
@@ -121,13 +136,17 @@ const Home = () => {
               className="bg-white rounded-2xl p-4 shadow-md"
             >
               <img
-                src={img}
-                alt="Product"
+                src={item.img}
+                alt={item.label}
                 className="h-44 w-full object-cover rounded-xl"
               />
-              <button className="mt-4 w-full bg-[#c6ab9a] py-2 rounded-full text-sm">
-                View
-              </button>
+
+              <Link
+                to={item.link}
+                className="mt-4 block text-center bg-[#c6ab9a] py-2 rounded-full text-sm"
+              >
+                View {item.label}
+              </Link>
             </motion.div>
           ))}
         </motion.div>
@@ -144,10 +163,9 @@ const Home = () => {
           >
             <h3 className="text-3xl font-serif mb-6">Why Choose Us?</h3>
             <p className="text-sm leading-relaxed text-gray-700">
-            At E-KID, we believe children’s clothing should be as gentle as a parent’s care and as strong as a child’s spirit.
-            Every piece we create is thoughtfully designed using premium, skin-friendly fabrics that are safe, breathable, and comfortable for all-day wear.
-            Our focus goes beyond style — we prioritize softness, durability, and perfect fitting so your child can move freely, play confidently, and feel happy in every moment. With timeless designs and careful craftsmanship, 
-            we ensure that each outfit reflects quality, trust, and love, making E-KID a brand parents can rely on
+              At E-KID, we design children’s clothing with the same care a parent
+              gives their child. Premium fabrics, comfort-first design, and
+              durability define every piece we create.
             </p>
           </motion.div>
 
@@ -162,23 +180,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="px-8 md:px-24 py-24 bg-[#f7f1e8]">
-        <motion.div
-          variants={staggerSoft}
-          initial="hidden"
-          whileInView="visible"
-          className="grid md:grid-cols-3 gap-16 text-center"
-        >
-          {["🌸 Quality", "👕 Style", "🍃 Organic"].map((item, i) => (
-            <motion.div key={i} variants={smoothFadeUp}>
-              <h4 className="text-xl font-serif">{item}</h4>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* ABOUT */}
+      {/* WHY BUY FROM US */}
       <section className="px-8 md:px-24 py-28 bg-white">
         <div className="grid md:grid-cols-2 gap-20 items-center">
           <motion.img
@@ -186,7 +188,7 @@ const Home = () => {
             initial="hidden"
             whileInView="visible"
             src={aboutImg}
-            alt="About"
+            alt="Why Buy From Us"
             className="rounded-3xl shadow-xl w-full object-cover"
           />
 
@@ -196,9 +198,11 @@ const Home = () => {
             whileInView="visible"
             className="bg-[#f3ecdf] p-12 rounded-3xl"
           >
-            <h3 className="text-3xl font-serif mb-6">About Us</h3>
+            <h3 className="text-3xl font-serif mb-6">Why Buy From Us</h3>
             <p className="text-sm text-gray-700">
-             E-KID is a premium kids fashion brand dedicated to creating clothing that combines comfort, safety, and modern elegance. We understand that childhood is a time of exploration and growth, which is why our collections are designed to support active lifestyles while maintaining a stylish appearance. From fabric selection to final stitching, every detail is handled with care to deliver high-quality garments that parents trust and children love. Our mission is to provide clothing that grows with your child, celebrates joyful moments, and brings confidence and comfort to every stage of childhood.
+              Parents trust E-KID for quality, kids love us for comfort.
+              Every outfit is crafted to support movement, play, and joyful
+              childhood moments.
             </p>
           </motion.div>
         </div>

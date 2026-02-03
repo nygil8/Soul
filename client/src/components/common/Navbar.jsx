@@ -19,9 +19,15 @@ const Navbar = () => {
 
       {/* ICONS */}
       <div className="flex gap-5 text-xl">
-        <span>🔍</span>
-        <Link to="/login">👤</Link>
-        <span>🛒</span>
+        <Link to="/search" aria-label="Search">
+          🔍
+        </Link>
+        <Link to="/login" aria-label="User Account">
+          👤
+        </Link>
+        <Link to="/cart" aria-label="Shopping Cart">
+          🛒
+        </Link>
       </div>
 
       {/* DROPDOWN */}
@@ -32,7 +38,7 @@ const Navbar = () => {
             <Link to="/" onClick={() => setOpen(false)}>Home</Link>
             <Link to="/about" onClick={() => setOpen(false)}>About Us</Link>
             <Link to="/contact" onClick={() => setOpen(false)}>Contact Us</Link>
-            <Link to="/my-account">My Account</Link>
+            <Link to="/my-account" onClick={() => setOpen(false)}>My Account</Link>
 
             <div className="w-24 h-px bg-black/30 my-4" />
 

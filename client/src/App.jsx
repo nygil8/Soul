@@ -10,7 +10,11 @@ import MyAccount from "./pages/account/MyAccount";
 import ShippingPolicy from "./pages/ShippingPolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RefundPolicy from "./pages/RefundPolicy";
-
+import Boys from "./pages/Boys";
+import Girls from "./pages/Girls";
+import Shoes from "./pages/Shoes";
+import Accessories from "./pages/Accessories";
+import ProductDetails from "./pages/ProductDetails";
 /* ADMIN */
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -27,6 +31,11 @@ function App() {
       <Routes>
         {/* USER  */}
         <Route path="/" element={<Home />} />
+        <Route path="/boys" element={<Boys />} />
+        <Route path="/girls" element={<Girls />} />
+        <Route path="/shoes" element={<Shoes />} />
+        <Route path="/accessories" element={<Accessories />} />
+        <Route path="/Product/:id" element={<ProductDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<UserLogin />} />

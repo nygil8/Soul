@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-// import contactHero from "../assets/contact-hero.jpg";
+import contactHero from "../assets/contact-hero.jpg";
 
 /* ANIMATION */
 const fadeUp = {
