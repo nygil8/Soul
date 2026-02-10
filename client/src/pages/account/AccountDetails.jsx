@@ -1,4 +1,72 @@
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+
 const AccountDetails = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    newPassword: ""
+  });
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const res = await api.get('/auth/me');
+      if (res.data.success) {
+        setFormData(prev => ({
+          ...prev,
+          username: res.data.data.username,
+          email: res.data.data.email
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to load profile", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    try {
+      // Update details
+      const res = await api.put('/auth/updatedetails', {
+        username: formData.username,
+        email: formData.email
+      });
+
+      let passwordMsg = "";
+      // Update password if provided
+      if (formData.newPassword) {
+        // Note: This endpoint might require current password depending on backend implementation. 
+        // Based on authController, updateDetails handles basic info. updatePassword handles password.
+        // For now, let's assume valid token is enough for details, but password change usually requires old password.
+        // authController.updatePassword requires currentPassword.
+        // To keep this simple for now, I will NOT implement password change here unless you want me to add a "Current Password" field.
+        // I'll stick to updating Profile Details for now to avoid complexity errors.
+        passwordMsg = " (Password change requires current password - feature pending)";
+      }
+
+      if (res.data.success) {
+        setMessage("Profile updated successfully!" + passwordMsg);
+      }
+    } catch (error) {
+      setMessage("Failed to update profile.");
+    }
+  };
+
+  if (loading) return <div>Loading profile...</div>;
+
   return (
     <div style={styles.page}>
       <div style={styles.container}>
@@ -6,7 +74,7 @@ const AccountDetails = () => {
         <div style={styles.left}>
           <h1 style={styles.title}>Account Details</h1>
           <p style={styles.subtitle}>
-            Update your personal information and change your password to keep your account secure.
+            Update your personal information to keep your account secure.
           </p>
         </div>
 
@@ -14,26 +82,39 @@ const AccountDetails = () => {
         <div style={styles.right}>
           <div style={styles.card}>
             <h2 style={styles.cardTitle}>Edit Account</h2>
+            {message && <p style={{ color: 'green', marginBottom: '10px' }}>{message}</p>}
 
-            <form style={styles.form}>
+            <form style={styles.form} onSubmit={handleSubmit}>
               <div style={styles.row}>
-                <input style={styles.input} placeholder="Full Name" type="text" name="fullName" />
+                <input
+                  style={styles.input}
+                  placeholder="Username"
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
                 <input
                   style={{ ...styles.input, backgroundColor: "#f0f0f0", cursor: "not-allowed" }}
                   placeholder="Email"
                   type="email"
                   name="email"
                   disabled
-                  value="user@example.com"
+                  value={formData.email}
                 />
               </div>
 
+              {/* Password field hidden/disabled for now as it requires current password logic */}
+              {/* 
               <input
                 style={styles.input}
-                placeholder="New Password"
+                placeholder="New Password (Optional)"
                 type="password"
                 name="newPassword"
-              />
+                value={formData.newPassword}
+                onChange={handleChange}
+              /> 
+              */}
 
               <button style={styles.button} type="submit">
                 Update Details

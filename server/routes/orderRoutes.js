@@ -1,12 +1,16 @@
 const express = require('express');
 const { check } = require('express-validator');
-const { createOrder, getAllOrders, updateOrderStatus, deleteOrder } = require('../controllers/orderController');
+const { createOrder, getAllOrders, updateOrderStatus, deleteOrder, getMyOrders } = require('../controllers/orderController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+// Get My Orders (must be before /:id routes to avoid conflict if any)
+router.get('/myorders', protect, getMyOrders);
+
 router.post(
     '/',
+    protect, // Ensure user is logged in to create order
     [
         // Customer Validation
         check('customer.firstName', 'First Name is required').not().isEmpty(),

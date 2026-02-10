@@ -91,3 +91,18 @@ exports.removeFromCart = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// Clear entire cart
+exports.clearCart = async (req, res) => {
+    try {
+        let cart = await Cart.findOne({ user: req.user.id });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+        res.status(200).json({ success: true, message: 'Cart cleared' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

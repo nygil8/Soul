@@ -76,11 +76,12 @@ const Overview = () => {
     return (
         <div>
             {/* KPI Cards */}
+            {/* KPI Cards */}
             <div className="kpi-grid">
-                <div className="kpi-card" style={{ background: 'linear-gradient(135deg, #fff 0%, #FFF5E1 100%)' }}>
+                <div className="kpi-card" style={{ background: 'var(--color-accent-cream)' }}>
                     <div className="kpi-header">
                         <span className="kpi-title">Total Sales</span>
-                        <div className="kpi-icon" style={{ backgroundColor: '#FFF5E1' }}><TrendingUp size={20} color="#FFA500" /></div>
+                        <div className="kpi-icon" style={{ backgroundColor: 'var(--color-bg-light)', color: 'var(--color-primary)' }}><TrendingUp size={20} /></div>
                     </div>
                     <div className="kpi-value">${stats.revenue.toLocaleString()}</div>
                     <div className="kpi-trend trend-up">
@@ -88,10 +89,10 @@ const Overview = () => {
                     </div>
                 </div>
 
-                <div className="kpi-card" style={{ background: 'linear-gradient(135deg, #fff 0%, #E0F2F1 100%)' }}>
+                <div className="kpi-card" style={{ background: 'var(--color-accent-cream)' }}>
                     <div className="kpi-header">
                         <span className="kpi-title">Total Orders</span>
-                        <div className="kpi-icon" style={{ backgroundColor: '#E0F2F1' }}><Package size={20} color="#00897B" /></div>
+                        <div className="kpi-icon" style={{ backgroundColor: 'var(--color-bg-light)', color: 'var(--color-primary)' }}><Package size={20} /></div>
                     </div>
                     <div className="kpi-value">{stats.totalOrders}</div>
                     <div className="kpi-trend trend-up">
@@ -99,10 +100,10 @@ const Overview = () => {
                     </div>
                 </div>
 
-                <div className="kpi-card" style={{ background: 'linear-gradient(135deg, #fff 0%, #E1F5FE 100%)' }}>
+                <div className="kpi-card" style={{ background: 'var(--color-accent-cream)' }}>
                     <div className="kpi-header">
                         <span className="kpi-title">New Customers</span>
-                        <div className="kpi-icon" style={{ backgroundColor: '#E1F5FE' }}><Users size={20} color="#039BE5" /></div>
+                        <div className="kpi-icon" style={{ backgroundColor: 'var(--color-bg-light)', color: 'var(--color-primary)' }}><Users size={20} /></div>
                     </div>
                     <div className="kpi-value">{stats.totalCustomers}</div>
                     <div className="kpi-trend trend-down">
@@ -110,10 +111,10 @@ const Overview = () => {
                     </div>
                 </div>
 
-                <div className="kpi-card" style={{ background: 'linear-gradient(135deg, #fff 0%, #FCE4EC 100%)' }}>
+                <div className="kpi-card" style={{ background: 'var(--color-accent-cream)' }}>
                     <div className="kpi-header">
                         <span className="kpi-title">Low Stock Alerts</span>
-                        <div className="kpi-icon" style={{ backgroundColor: '#FCE4EC' }}><Package size={20} color="#D81B60" /></div>
+                        <div className="kpi-icon" style={{ backgroundColor: '#FCE4EC', color: '#D81B60' }}><Package size={20} /></div>
                     </div>
                     <div className="kpi-value">{stats.lowStockCount}</div>
                     <div className="kpi-trend">

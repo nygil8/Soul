@@ -1,8 +1,28 @@
-const Orders = () => {
-  
-  // dummy data (later replace with API)
+import { useState, useEffect } from "react";
+import api from "../../utils/api";
+import { Link } from "react-router-dom";
 
-  const orders = [];
+const Orders = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await api.get('/orders/myorders');
+        if (res.data.success) {
+          setOrders(res.data.data || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  if (loading) return <div>Loading orders...</div>;
 
   return (
     <div style={styles.wrapper}>
@@ -16,19 +36,21 @@ const Orders = () => {
             You haven’t placed any orders yet. Once you do, they’ll appear here
             with full details.
           </p>
+          <Link to="/" style={{ ...styles.viewBtn, marginTop: '20px', display: 'inline-block' }}>Start Shopping</Link>
         </div>
       ) : (
         <div style={styles.grid}>
           {orders.map((order) => (
-            <div key={order.id} style={styles.card}>
+            <div key={order._id} style={styles.card}>
               <div style={styles.cardHeader}>
-                <span style={styles.orderId}>Order #{order.id}</span>
+                <span style={styles.orderId}>Order #{order._id.slice(-6).toUpperCase()}</span>
                 <span style={styles.status}>{order.status}</span>
               </div>
 
               <div style={styles.cardBody}>
-                <p>Date: {order.date}</p>
-                <p>Total: ₹{order.total}</p>
+                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                <p>Total: ₹{order.orderDetails?.totalAmount}</p>
+                <p>Items: {order.orderDetails?.items?.length}</p>
               </div>
 
               <button style={styles.viewBtn}>View Details</button>

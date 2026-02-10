@@ -46,6 +46,7 @@ exports.register = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allow cross-site in prod if frontend/backend are on diff domains, otherwise 'strict'
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 
@@ -74,8 +75,15 @@ exports.login = async (req, res) => {
     }
 
     try {
-        // Check for user
-        const user = await User.findOne({ email });
+        // Check for user by email OR username
+        // The frontend sends the input in the 'email' field
+        const user = await User.findOne({
+            $or: [
+                { email: email },
+                { username: email }
+            ]
+        });
+
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -93,6 +101,7 @@ exports.login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 

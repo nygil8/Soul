@@ -13,6 +13,7 @@ exports.createOrder = async (req, res) => {
 
         // Create new order
         const order = new Order({
+            user: req.user.id, // Save the logged-in user's ID
             customer,
             address,
             orderDetails
@@ -34,6 +35,19 @@ exports.createOrder = async (req, res) => {
             success: false,
             message: 'Server error processing order'
         });
+    }
+};
+
+exports.getMyOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
+        res.json({
+            success: true,
+            data: orders
+        });
+    } catch (error) {
+        console.error('Get My Orders Error:', error);
+        res.status(500).json({ message: 'Server error fetching orders' });
     }
 };
 

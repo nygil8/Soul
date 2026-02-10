@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <header className="relative flex items-center justify-between px-8 py-5 bg-[#f3ecdf]">
-      
+
       {/* MENU */}
       <button onClick={() => setOpen(!open)} className="text-2xl">
         ☰
@@ -18,10 +18,22 @@ const Navbar = () => {
       </Link>
 
       {/* ICONS */}
-      <div className="flex gap-5 text-xl">
-        <Link to="/search" aria-label="Search">
-          🔍
-        </Link>
+      <div className="flex gap-5 text-xl items-center">
+        {/* VIEW SEARCH INPUT */}
+        <div className="relative group">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="text-sm border-b border-black bg-transparent focus:outline-none w-24 focus:w-40 transition-all duration-300"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                window.location.href = `/search?keyword=${e.target.value}`;
+              }
+            }}
+          />
+          <span className="absolute right-0 top-0 pointer-events-none">🔍</span>
+        </div>
+
         <Link to="/login" aria-label="User Account">
           👤
         </Link>

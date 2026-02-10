@@ -1,16 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-
-/* TEMP IMAGES */
-import g1 from "../assets/product1.jpg";
-import g2 from "../assets/product2.jpg";
-import g3 from "../assets/product3.jpg";
-import g4 from "../assets/product4.jpg";
+import api from "../utils/api";
 
 /* AGE GROUPS */
-const ageTabs = ["0-2 Years", "2-6 Years", "7-12 Years"];
+const ageTabs = ["0-2 Yrs", "3-6 Yrs", "7-12 Yrs"];
 
 /* CATEGORIES */
 const categories = [
@@ -23,22 +18,36 @@ const categories = [
   "Combo",
 ];
 
-/* PRODUCTS */
-const products = [
-  { id: 1, img: g1, age: "0-2 Years", category: "Combo", stock: true },
-  { id: 2, img: g2, age: "0-2 Years", category: "Frocks", stock: true },
-  { id: 3, img: g3, age: "2-6 Years", category: "Party Wear", stock: false },
-  { id: 4, img: g4, age: "7-12 Years", category: "Jeans", stock: true },
-];
-
 const Girls = () => {
-  const [activeAge, setActiveAge] = useState("0-2 Years");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeAge, setActiveAge] = useState("0-2 Yrs");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get('/products');
+        if (res.data.success) {
+          // Filter for Girls or Unisex
+          const girlsProducts = res.data.data.filter(p =>
+            p.gender === 'Girls' || p.gender === 'Unisex'
+          );
+          setProducts(girlsProducts);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const filteredProducts = products.filter(
     (p) =>
-      p.age === activeAge &&
+      p.ageType === activeAge &&
       (activeCategory === "All" || p.category === activeCategory)
   );
 
@@ -59,10 +68,9 @@ const Girls = () => {
             key={age}
             onClick={() => setActiveAge(age)}
             className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
-              ${
-                activeAge === age
-                  ? "bg-[#c6ab9a] text-white"
-                  : "bg-[#eee4d7]"
+              ${activeAge === age
+                ? "bg-[#c6ab9a] text-white"
+                : "bg-[#eee4d7]"
               }`}
           >
             {age}
@@ -106,9 +114,8 @@ const Girls = () => {
                     setActiveCategory(cat);
                     setFilterOpen(false);
                   }}
-                  className={`block w-full text-left text-base ${
-                    activeCategory === cat && "font-bold"
-                  }`}
+                  className={`block w-full text-left text-base ${activeCategory === cat && "font-bold"
+                    }`}
                 >
                   {cat}
                 </button>
@@ -120,7 +127,7 @@ const Girls = () => {
 
       {/* MAIN CONTENT */}
       <section className="px-6 md:px-24 pb-28 grid md:grid-cols-[240px_1fr] gap-14 flex-1">
-        
+
         {/* DESKTOP FILTER */}
         <aside className="hidden md:block">
           <ul className="space-y-5 text-lg font-serif">
@@ -128,9 +135,8 @@ const Girls = () => {
               <li
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`cursor-pointer ${
-                  activeCategory === cat && "font-bold"
-                }`}
+                className={`cursor-pointer ${activeCategory === cat && "font-bold"
+                  }`}
               >
                 {cat}
               </li>
@@ -139,44 +145,54 @@ const Girls = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((item) => (
-            <div key={item.id} className="text-center">
-              
-              {/* IMAGE */}
-              <div className="relative">
-                <Link to={`/product/${item.id}`}>
-                  <img
-                    src={item.img}
-                    alt="Product"
-                    className={`w-full aspect-[3/4] object-cover rounded-2xl mb-3 ${
-                      !item.stock && "opacity-60"
-                    }`}
-                  />
-                </Link>
+        {loading ? (
+          <div>Loading products...</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredProducts.length === 0 ? (
+              <div className="col-span-full text-center py-10 text-gray-500">No products found for this category.</div>
+            ) : (
+              filteredProducts.map((item) => (
+                <div key={item._id} className="text-center">
 
-                {!item.stock && (
-                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
-                    Out of Stock
-                  </span>
-                )}
-              </div>
+                  {/* IMAGE */}
+                  <div className="relative">
+                    <Link to={`/product/${item._id}`}>
+                      <img
+                        src={item.image || "https://via.placeholder.com/300?text=No+Image"}
+                        alt={item.name}
+                        className={`w-full aspect-[3/4] object-cover rounded-2xl mb-3 ${(!item.stock || item.stock <= 0) && "opacity-60"
+                          }`}
+                      />
+                    </Link>
 
-              {/* BUTTON */}
-              <Link
-                to="/cart"
-                className={`inline-block px-5 py-2 rounded-full text-sm transition
-                  ${
-                    item.stock
-                      ? "bg-[#c6ab9a] hover:opacity-90"
-                      : "bg-gray-400 pointer-events-none"
-                  }`}
-              >
-                Add to Cart
-              </Link>
-            </div>
-          ))}
-        </div>
+                    {(!item.stock || item.stock <= 0) && (
+                      <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
+                        Out of Stock
+                      </span>
+                    )}
+                  </div>
+
+                  {/* INFO */}
+                  <h3 className="font-medium text-lg">{item.name}</h3>
+                  <p className="text-gray-600">₹{item.price}</p>
+
+                  {/* BUTTON */}
+                  <Link
+                    to={`/product/${item._id}`}
+                    className={`inline-block px-5 py-2 rounded-full text-sm transition mt-2
+                      ${item.stock > 0
+                        ? "bg-[#c6ab9a] hover:opacity-90"
+                        : "bg-gray-400 pointer-events-none"
+                      }`}
+                  >
+                    View Details
+                  </Link>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </section>
 
       <Footer />

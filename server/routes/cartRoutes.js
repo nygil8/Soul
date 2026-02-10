@@ -9,5 +9,6 @@ router.use(protect);
 router.get('/', getCart);
 router.post('/add', addToCart);
 router.delete('/remove/:productId', removeFromCart);
+router.delete('/clear', require('../controllers/cartController').clearCart);
 
 module.exports = router;

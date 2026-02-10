@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer";
 import productImg from "../assets/product1.jpg";
 
 /* 🔹 ADMIN / BACKEND VALUE */
-const productType = "top"; 
+const productType = "top";
 // "top" → shirts, combos, jackets (90–160)
 // "bottom" → jeans, pants (S–XL)
 
@@ -22,6 +22,8 @@ const getSizes = (ageGroup) => {
   if (ageGroup === "7-12") return ["S", "M", "L", "XL"];
 };
 
+import api from "../utils/api";
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate(); // Initialize navigate
@@ -29,13 +31,44 @@ const ProductDetails = () => {
   const [ageGroup, setAgeGroup] = useState("2-6");
   const [size, setSize] = useState("");
   const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  const inStock = true;
+  const inStock = true; // Ideally fetch this from API too (Step for another time)
 
   // Handler to navigate to cart page
-  const handleAddToCart = () => {
-    if (!size || !inStock) return; // Safety check
-    navigate("/cart"); // Navigate to Cart page
+  const handleAddToCart = async () => {
+    if (!size || !inStock) {
+      alert("Please select a size first.");
+      return;
+    }
+
+    // Check login
+    const user = localStorage.getItem('user');
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await api.post('/cart/add', {
+        productId: id,
+        quantity: qty
+      });
+
+      if (res.data.success) {
+        navigate("/cart");
+      }
+    } catch (error) {
+      console.error("Add to cart failed", error);
+      if (error.response?.status === 401) {
+        navigate('/login');
+      } else {
+        alert("Failed to add to cart. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -110,7 +143,7 @@ const ProductDetails = () => {
                   Not exact cm, but based on average child height.
                 </p>
                 <p style={styles.helper}>
-                  Rough guide:  
+                  Rough guide:
                   S (90–100) · M (110–120) · L (130–140) · XL (150–160)
                 </p>
               </div>

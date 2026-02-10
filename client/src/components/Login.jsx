@@ -32,7 +32,14 @@ const Login = () => {
 
             // We still store user info for UI display (username, avatar), 
             // but this is NOT for authentication.
-            localStorage.setItem('user', JSON.stringify(res.data.user));
+            // SECURITY: Explicitly filtering what we store to avoid PII in localStorage
+            const userForStorage = {
+                id: res.data.user.id,
+                username: res.data.user.username,
+                role: res.data.user.role,
+                profilePhoto: res.data.user.profilePhoto
+            };
+            localStorage.setItem('user', JSON.stringify(userForStorage));
 
             // Redirect to dashboard
             navigate('/dashboard');

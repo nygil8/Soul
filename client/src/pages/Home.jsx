@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import api from "../utils/api";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import ProductSkeleton from "../components/common/ProductSkeleton";
+import PageTransition from "../components/common/PageTransition";
 
 /* ASSETS */
 import heroImg from "../assets/hero.jpg";
@@ -48,6 +52,24 @@ const staggerSoft = {
 };
 
 const Home = () => {
+  const [featured, setFeatured] = useState([]);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await api.get('/products');
+        if (res.data.success) {
+          // Determine logic for "featured". For now, just take first 4 distinct items.
+          // Or random 4.
+          setFeatured(res.data.data.slice(0, 4));
+        }
+      } catch (e) {
+        console.error("Failed to fetch featured", e);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
   const scrollToCategories = () => {
     document
       .getElementById("categories")
@@ -55,161 +77,197 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-[#f7f1e8] text-[#2b2b2b] overflow-x-hidden">
-      <Navbar />
 
-      {/* HERO */}
-      <section className="grid md:grid-cols-2 items-center px-8 md:px-24 py-20 gap-16">
-        <motion.div
-          variants={staggerSoft}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="space-y-6"
-        >
-          <motion.h1
-            variants={smoothFadeUp}
-            className="text-3xl md:text-5xl font-serif leading-snug"
+    <PageTransition>
+      <div className="bg-[#f7f1e8] text-[#2b2b2b] overflow-x-hidden">
+        <Navbar />
+
+        {/* HERO */}
+        <section className="grid md:grid-cols-2 items-center px-8 md:px-24 py-20 gap-16">
+          <motion.div
+            variants={staggerSoft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="space-y-6"
           >
-            " Timeless styles <br /> for tiny treasures "
-          </motion.h1>
-
-          <motion.p
-            variants={smoothFadeUp}
-            className="text-sm max-w-md text-gray-700"
-          >
-            Discover soft, stylish, and comfortable outfits crafted with love
-            for your little ones.
-          </motion.p>
-
-          {/* SHOP NOW → SCROLL */}
-          <motion.button
-            variants={smoothFadeUp}
-            onClick={scrollToCategories}
-            className="bg-[#c6ab9a] px-8 py-3 rounded-full text-sm hover:scale-105 transition"
-          >
-            Shop Now →
-          </motion.button>
-        </motion.div>
-
-        <motion.img
-          variants={smoothRight}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          src={heroImg}
-          alt="Hero"
-          className="rounded-3xl shadow-xl w-full object-cover"
-        />
-      </section>
-
-      {/* CATEGORIES */}
-      <section
-        id="categories"
-        className="px-8 md:px-24 py-24 bg-[#f3ecdf]"
-      >
-        <motion.h2
-          variants={smoothFadeUp}
-          initial="hidden"
-          whileInView="visible"
-          className="text-center text-3xl font-serif mb-16"
-        >
-          Shop by Category
-        </motion.h2>
-
-        <motion.div
-          variants={staggerSoft}
-          initial="hidden"
-          whileInView="visible"
-          className="grid grid-cols-2 md:grid-cols-4 gap-10"
-        >
-          {[
-            { img: product1, link: "/boys", label: "boys" },
-            { img: product2, link: "/girls", label: "girls" },
-            { img: product3, link: "/shoes", label: "Shoes" },
-            { img: product4, link: "/accessories", label: "Accessories" },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
+            <motion.h1
               variants={smoothFadeUp}
-              whileHover={{ y: -8 }}
-              className="bg-white rounded-2xl p-4 shadow-md"
+              className="text-3xl md:text-5xl font-serif leading-snug"
             >
-              <img
-                src={item.img}
-                alt={item.label}
-                className="h-44 w-full object-cover rounded-xl"
-              />
+              " Timeless styles <br /> for tiny treasures "
+            </motion.h1>
 
-              <Link
-                to={item.link}
-                className="mt-4 block text-center bg-[#c6ab9a] py-2 rounded-full text-sm"
+            <motion.p
+              variants={smoothFadeUp}
+              className="text-sm max-w-md text-gray-700"
+            >
+              Discover soft, stylish, and comfortable outfits crafted with love
+              for your little ones.
+            </motion.p>
+
+            {/* SHOP NOW → SCROLL */}
+            <motion.button
+              variants={smoothFadeUp}
+              onClick={scrollToCategories}
+              className="bg-[#c6ab9a] px-8 py-3 rounded-full text-sm hover:scale-105 transition"
+            >
+              Shop Now →
+            </motion.button>
+          </motion.div>
+
+          <motion.img
+            variants={smoothRight}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            src={heroImg}
+            alt="Hero"
+            className="rounded-3xl shadow-xl w-full object-cover"
+          />
+        </section>
+
+        {/* CATEGORIES */}
+        <section
+          id="categories"
+          className="px-8 md:px-24 py-24 bg-[#f3ecdf]"
+        >
+          <motion.h2
+            variants={smoothFadeUp}
+            initial="hidden"
+            whileInView="visible"
+            className="text-center text-3xl font-serif mb-16"
+          >
+            Shop by Category
+          </motion.h2>
+
+          <motion.div
+            variants={staggerSoft}
+            initial="hidden"
+            whileInView="visible"
+            className="grid grid-cols-2 md:grid-cols-4 gap-10"
+          >
+            {[
+              { img: product1, link: "/boys", label: "boys" },
+              { img: product2, link: "/girls", label: "girls" },
+              { img: product3, link: "/shoes", label: "Shoes" },
+              { img: product4, link: "/accessories", label: "Accessories" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={smoothFadeUp}
+                whileHover={{ y: -8 }}
+                className="bg-white rounded-2xl p-4 shadow-md"
               >
-                View {item.label}
-              </Link>
+                <img
+                  src={item.img}
+                  alt={item.label}
+                  className="h-44 w-full object-cover rounded-xl"
+                />
+
+                <Link
+                  to={item.link}
+                  className="mt-4 block text-center bg-[#c6ab9a] py-2 rounded-full text-sm"
+                >
+                  View {item.label}
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+
+        {/* FEATURED PRODUCTS (DYNAMIC) */}
+        <section className="px-8 md:px-24 py-24 bg-white">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-serif mb-4">Featured Collection</h2>
+            <p className="text-gray-600">Handpicked favorites just for you</p>
+          </div>
+
+          {featured.length === 0 ? (
+            <ProductSkeleton count={4} />
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {featured.map((item) => (
+                <div key={item._id} className="text-center group">
+                  <Link to={`/product/${item._id}`}>
+                    <div className="relative overflow-hidden rounded-2xl mb-4">
+                      <img
+                        src={item.image || "https://via.placeholder.com/300"}
+                        alt={item.name}
+                        className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
+                      />
+                      {!item.stock && (
+                        <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded">Out of Stock</span>
+                      )}
+                    </div>
+                    <h3 className="font-medium text-lg mb-1">{item.name}</h3>
+                    <p className="text-[#c6ab9a] font-bold">₹{item.price}</p>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* WHY CHOOSE US */}
+        <section className="px-8 md:px-24 py-28 bg-white">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
+            <motion.div
+              variants={smoothLeft}
+              initial="hidden"
+              whileInView="visible"
+              className="bg-[#f3ecdf] p-12 rounded-3xl shadow-lg"
+            >
+              <h3 className="text-3xl font-serif mb-6">Why Choose Us?</h3>
+              <p className="text-sm leading-relaxed text-gray-700">
+                At E-KID, we design children’s clothing with the same care a parent
+                gives their child. Premium fabrics, comfort-first design, and
+                durability define every piece we create.
+              </p>
             </motion.div>
-          ))}
-        </motion.div>
-      </section>
 
-      {/* WHY CHOOSE US */}
-      <section className="px-8 md:px-24 py-28 bg-white">
-        <div className="grid md:grid-cols-2 gap-20 items-center">
-          <motion.div
-            variants={smoothLeft}
-            initial="hidden"
-            whileInView="visible"
-            className="bg-[#f3ecdf] p-12 rounded-3xl shadow-lg"
-          >
-            <h3 className="text-3xl font-serif mb-6">Why Choose Us?</h3>
-            <p className="text-sm leading-relaxed text-gray-700">
-              At E-KID, we design children’s clothing with the same care a parent
-              gives their child. Premium fabrics, comfort-first design, and
-              durability define every piece we create.
-            </p>
-          </motion.div>
+            <motion.img
+              variants={smoothRight}
+              initial="hidden"
+              whileInView="visible"
+              src={whyImg}
+              alt="Why Choose Us"
+              className="rounded-3xl shadow-xl w-full object-cover"
+            />
+          </div>
+        </section>
 
-          <motion.img
-            variants={smoothRight}
-            initial="hidden"
-            whileInView="visible"
-            src={whyImg}
-            alt="Why Choose Us"
-            className="rounded-3xl shadow-xl w-full object-cover"
-          />
-        </div>
-      </section>
+        {/* WHY BUY FROM US */}
+        <section className="px-8 md:px-24 py-28 bg-white">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
+            <motion.img
+              variants={smoothLeft}
+              initial="hidden"
+              whileInView="visible"
+              src={aboutImg}
+              alt="Why Buy From Us"
+              className="rounded-3xl shadow-xl w-full object-cover"
+            />
 
-      {/* WHY BUY FROM US */}
-      <section className="px-8 md:px-24 py-28 bg-white">
-        <div className="grid md:grid-cols-2 gap-20 items-center">
-          <motion.img
-            variants={smoothLeft}
-            initial="hidden"
-            whileInView="visible"
-            src={aboutImg}
-            alt="Why Buy From Us"
-            className="rounded-3xl shadow-xl w-full object-cover"
-          />
+            <motion.div
+              variants={smoothRight}
+              initial="hidden"
+              whileInView="visible"
+              className="bg-[#f3ecdf] p-12 rounded-3xl"
+            >
+              <h3 className="text-3xl font-serif mb-6">Why Buy From Us</h3>
+              <p className="text-sm text-gray-700">
+                Parents trust E-KID for quality, kids love us for comfort.
+                Every outfit is crafted to support movement, play, and joyful
+                childhood moments.
+              </p>
+            </motion.div>
+          </div>
+        </section>
 
-          <motion.div
-            variants={smoothRight}
-            initial="hidden"
-            whileInView="visible"
-            className="bg-[#f3ecdf] p-12 rounded-3xl"
-          >
-            <h3 className="text-3xl font-serif mb-6">Why Buy From Us</h3>
-            <p className="text-sm text-gray-700">
-              Parents trust E-KID for quality, kids love us for comfort.
-              Every outfit is crafted to support movement, play, and joyful
-              childhood moments.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 

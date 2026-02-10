@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X, Upload, Eye, Star, Percent } from 'lucide-react';
 import api from '../../utils/api';
+import toast from 'react-hot-toast';
 import './ProductManagement.css';
 
 const ProductManagement = () => {
@@ -107,12 +108,13 @@ const ProductManagement = () => {
                 // Create
                 const res = await api.post('/products', formData);
                 setProducts([res.data.data, ...products]);
+                toast.success('Product created successfully');
             }
             closeModal();
         } catch (error) {
             console.error('Operation failed', error);
             const message = error.response?.data?.message || 'Failed to save product';
-            alert(message);
+            toast.error(message);
         }
     };
 
@@ -122,9 +124,10 @@ const ProductManagement = () => {
         try {
             await api.delete(`/products/${id}`);
             setProducts(products.filter(p => p._id !== id));
+            toast.success('Product deleted');
         } catch (error) {
             console.error('Delete failed', error);
-            alert('Failed to delete product');
+            toast.error('Failed to delete product');
         }
     };
 

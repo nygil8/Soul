@@ -1,15 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import ProductSkeleton from "../components/common/ProductSkeleton";
+import api from "../utils/api";
 
-/* TEMP IMAGES */
-import p1 from "../assets/product1.jpg";
-import p2 from "../assets/product2.jpg";
-import p3 from "../assets/product3.jpg";
-import p4 from "../assets/product4.jpg";
-
-const ageTabs = ["0-2 Years", "2-6 Years", "7-12 Years"];
+// Matches DB 'ageType' enum
+const ageTabs = ["0-2 Yrs", "3-6 Yrs", "7-12 Yrs"];
 
 const categories = [
   "All",
@@ -22,21 +19,37 @@ const categories = [
   "Combo",
 ];
 
-const products = [
-  { id: 1, img: p1, age: "0-2 Years", category: "Combo", stock: true },
-  { id: 2, img: p2, age: "0-2 Years", category: "Shirt", stock: true },
-  { id: 3, img: p3, age: "2-6 Years", category: "Hoodies", stock: false },
-  { id: 4, img: p4, age: "7-12 Years", category: "Jeans", stock: true },
-];
-
 const Boys = () => {
-  const [activeAge, setActiveAge] = useState("0-2 Years");
+  const [products, setProducts] = useState([]); // All fetched products
+  const [loading, setLoading] = useState(true);
+  const [activeAge, setActiveAge] = useState("0-2 Yrs");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get('/products');
+        if (res.data.success) {
+          // Filter for Boys or Unisex initially from the entire catalog
+          const boysProducts = res.data.data.filter(p =>
+            p.gender === 'Boys' || p.gender === 'Unisex'
+          );
+          setProducts(boysProducts);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Filter based on UI selections
   const filteredProducts = products.filter(
     (p) =>
-      p.age === activeAge &&
+      p.ageType === activeAge &&
       (activeCategory === "All" || p.category === activeCategory)
   );
 
@@ -57,10 +70,9 @@ const Boys = () => {
             key={age}
             onClick={() => setActiveAge(age)}
             className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
-              ${
-                activeAge === age
-                  ? "bg-[#c6ab9a] text-white"
-                  : "bg-[#eee4d7]"
+              ${activeAge === age
+                ? "bg-[#c6ab9a] text-white"
+                : "bg-[#eee4d7]"
               }`}
           >
             {age}
@@ -104,9 +116,8 @@ const Boys = () => {
                     setActiveCategory(cat);
                     setFilterOpen(false);
                   }}
-                  className={`block w-full text-left text-base ${
-                    activeCategory === cat && "font-bold"
-                  }`}
+                  className={`block w-full text-left text-base ${activeCategory === cat && "font-bold"
+                    }`}
                 >
                   {cat}
                 </button>
@@ -118,7 +129,7 @@ const Boys = () => {
 
       {/* MAIN CONTENT */}
       <section className="px-6 md:px-24 pb-24 grid md:grid-cols-[240px_1fr] gap-14">
-        
+
         {/* DESKTOP FILTER */}
         <aside className="hidden md:block">
           <ul className="space-y-5 text-lg font-serif">
@@ -126,9 +137,8 @@ const Boys = () => {
               <li
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`cursor-pointer ${
-                  activeCategory === cat && "font-bold"
-                }`}
+                className={`cursor-pointer ${activeCategory === cat && "font-bold"
+                  }`}
               >
                 {cat}
               </li>
@@ -137,51 +147,62 @@ const Boys = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((item) => (
-            <div key={item.id} className="group text-center">
-              
-              {/* IMAGE WRAPPER */}
-              <div className="relative">
-                <Link to={`/product/${item.id}`}>
-                  <img
-                    src={item.img}
-                    alt="Product"
-                    className={`
-                      w-full 
-                      h-60 sm:h-72 
-                      object-cover 
-                      rounded-2xl 
-                      mb-3 
-                      transition
-                      ${!item.stock && "opacity-60"}
-                    `}
-                  />
-                </Link>
+        {loading ? (
+          <ProductSkeleton count={8} />
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+            {filteredProducts.length === 0 ? (
+              <div className="col-span-full text-center py-10 text-gray-500">No products found for this category.</div>
+            ) : (
+              filteredProducts.map((item) => (
+                <div key={item._id} className="group text-center">
 
-                {/* OUT OF STOCK BADGE */}
-                {!item.stock && (
-                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full tracking-wide">
-                    Out of Stock
-                  </span>
-                )}
-              </div>
+                  {/* IMAGE WRAPPER */}
+                  <div className="relative">
+                    <Link to={`/product/${item._id}`}>
+                      <img
+                        src={item.image || "https://via.placeholder.com/300?text=No+Image"}
+                        alt={item.name}
+                        className={`
+                          w-full 
+                          h-60 sm:h-72 
+                          object-cover 
+                          rounded-2xl 
+                          mb-3 
+                          transition
+                          ${!item.stock > 0 && "opacity-60"}
+                        `}
+                      />
+                    </Link>
 
-              {/* ADD TO CART */}
-              <Link
-                to="/cart"
-                className={`inline-block px-5 py-2 rounded-full text-sm transition
-                  ${
-                    item.stock
-                      ? "bg-[#c6ab9a] hover:opacity-90"
-                      : "bg-gray-400 cursor-not-allowed pointer-events-none"
-                  }`}
-              >
-                Add to Cart
-              </Link>
-            </div>
-          ))}
-        </div>
+                    {/* OUT OF STOCK BADGE */}
+                    {(!item.stock || item.stock <= 0) && (
+                      <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full tracking-wide">
+                        Out of Stock
+                      </span>
+                    )}
+                  </div>
+
+                  {/* INFO */}
+                  <h3 className="font-medium text-lg">{item.name}</h3>
+                  <p className="text-gray-600">₹{item.price}</p>
+
+                  {/* VIEW DETAILS / ADD TO CART */}
+                  <Link
+                    to={`/product/${item._id}`}
+                    className={`inline-block px-5 py-2 rounded-full text-sm transition mt-2
+                      ${item.stock > 0
+                        ? "bg-[#c6ab9a] hover:opacity-90"
+                        : "bg-gray-400 cursor-not-allowed pointer-events-none"
+                      }`}
+                  >
+                    View Details
+                  </Link>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </section>
 
       <Footer />

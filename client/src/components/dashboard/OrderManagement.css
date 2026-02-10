@@ -34,7 +34,7 @@
 }
 
 .filter-btn.active {
-    background: var(--primary);
+    background: var(--color-primary);
     color: white;
     font-weight: 500;
 }
@@ -67,7 +67,8 @@
 }
 
 .orders-table th {
-    background: #f8fafc;
+    background: var(--color-accent-cream);
+    color: var(--color-text-secondary);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -106,7 +107,7 @@
 }
 
 .selected-row {
-    background: #f8fafc;
+    background: var(--color-accent-mint);
 }
 
 /* Order Details Panel */

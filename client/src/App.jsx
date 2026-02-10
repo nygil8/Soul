@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
 
 /* USER */
 import Home from "./pages/Home";
@@ -15,6 +17,9 @@ import Girls from "./pages/Girls";
 import Shoes from "./pages/Shoes";
 import Accessories from "./pages/Accessories";
 import ProductDetails from "./pages/ProductDetails";
+import Search from "./pages/Search";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 /* ADMIN */
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -25,10 +30,12 @@ import CustomerManagement from "./components/dashboard/CustomerManagement";
 import ReviewManagement from "./components/dashboard/ReviewManagement";
 import Profile from "./components/Profile";
 
-function App() {
+function AnimatedRoutes() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         {/* USER  */}
         <Route path="/" element={<Home />} />
         <Route path="/boys" element={<Boys />} />
@@ -36,6 +43,9 @@ function App() {
         <Route path="/shoes" element={<Shoes />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/Product/:id" element={<ProductDetails />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<UserLogin />} />
@@ -62,6 +72,15 @@ function App() {
           <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AnimatedRoutes />
+      <Toaster position="top-center" reverseOrder={false} />
     </Router>
   );
 }

@@ -2,17 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --color-bg-light: #FFF1E4;
+    --color-bg-light: #fdf0e3;
+    /* Login body background */
     --color-text-primary: #1F2937;
-    --color-text-secondary: #6B7280;
-    --color-accent-peach: #FFDAB9;
-    --color-accent-cream: #FFF5E1;
+    --color-text-secondary: #4B5563;
+    --color-accent-peach: #f3efe3;
+    /* Login header background */
+    --color-accent-cream: #f3efe3;
     --color-accent-mint: #E0F2F1;
     --color-accent-blue: #E1F5FE;
-    --color-primary: #4A90E2;
-    --color-glass-border: rgba(255, 255, 255, 0.4);
-    --color-glass-bg: rgba(255, 255, 255, 0.6);
-    --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.05);
+    --color-primary: #b79a89;
+    /* Login button/footer color */
+    --color-glass-border: rgba(183, 154, 137, 0.2);
+    --color-glass-bg: rgba(253, 240, 227, 0.6);
+    --shadow-soft: 0 4px 30px rgba(183, 154, 137, 0.1);
     --font-main: 'Outfit', sans-serif;
 }
 
@@ -36,7 +39,8 @@ body {
 /* Sidebar */
 .sidebar {
     width: 260px;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(243, 239, 227, 0.85);
+    /* Accent Cream with opacity */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-right: 1px solid var(--color-glass-border);
@@ -57,7 +61,8 @@ body {
 }
 
 .logo-icon {
-    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+    background: var(--color-primary);
+    /* #b79a89 */
     width: 40px;
     height: 40px;
     border-radius: 12px;
@@ -66,7 +71,7 @@ body {
     justify-content: center;
     color: white;
     font-weight: bold;
-    box-shadow: 0 4px 12px rgba(255, 154, 158, 0.4);
+    box-shadow: 0 4px 12px rgba(183, 154, 137, 0.4);
 }
 
 .brand-name {

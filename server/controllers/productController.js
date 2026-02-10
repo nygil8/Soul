@@ -2,7 +2,14 @@ const Product = require('../models/Product');
 
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().sort({ createdAt: -1 });
+        const keyword = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: 'i'
+            }
+        } : {};
+
+        const products = await Product.find({ ...keyword }).sort({ createdAt: -1 });
         res.status(200).json({
             success: true,
             data: products

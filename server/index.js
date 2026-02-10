@@ -59,6 +59,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/stats', require('./routes/statsRoutes'));
+app.use(require('./middleware/errorMiddleware').errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
