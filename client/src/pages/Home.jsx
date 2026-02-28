@@ -170,13 +170,13 @@ const Home = () => {
           </motion.div>
 
           <motion.img
-            variants={smoothRight}
-            initial="hidden"
-            whileInView="visible"
-            src={whyImg}
-            alt="Why Choose Us"
-            className="rounded-3xl shadow-xl w-full object-cover"
-          />
+  variants={smoothRight}
+  initial="hidden"
+  whileInView="visible"
+  src={whyImg}
+  alt="Why Choose Us"
+  className="rounded-3xl shadow-xl w-full md:w-[80%] md:mx-auto object-cover"
+/>
         </div>
       </section>
 

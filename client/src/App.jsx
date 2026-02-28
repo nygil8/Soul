@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+
 /* USER */
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -14,7 +15,17 @@ import Boys from "./pages/Boys";
 import Girls from "./pages/Girls";
 import Shoes from "./pages/Shoes";
 import Accessories from "./pages/Accessories";
-import ProductDetails from "./pages/ProductDetails";
+import ClothingDetails from "./pages/ClothingDetails";
+import ShoesDetails from "./pages/ShoesDetails";
+import AccessoriesDetails from "./pages/AccessoriesDetails";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/CheckOut";
+import Payment from "./pages/Payment";
+import PaymentStatus from "./pages/PaymentStatus";
+import OrderSuccess from "./pages/OrderSuccess";
+import OrderFailed from "./pages/OrderFailed";
+import NotFound from "./pages/NotFound";
+
 /* ADMIN */
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -24,6 +35,7 @@ import ProductManagement from "./components/dashboard/ProductManagement";
 import CustomerManagement from "./components/dashboard/CustomerManagement";
 import ReviewManagement from "./components/dashboard/ReviewManagement";
 import Profile from "./components/Profile";
+
 
 function App() {
   return (
@@ -35,7 +47,13 @@ function App() {
         <Route path="/girls" element={<Girls />} />
         <Route path="/shoes" element={<Shoes />} />
         <Route path="/accessories" element={<Accessories />} />
-        <Route path="/Product/:id" element={<ProductDetails />} />
+        <Route path="/Product/:id" element={<ClothingDetails />} />
+        <Route path="/shoes/:age/:id" element={<ShoesDetails />} />
+        <Route path="/accessories/:id" element={<AccessoriesDetails />} />
+        <Route path="/cart" element={<Cart/>}/>
+        <Route path="/checkout" element={<Checkout/>}/>
+        <Route path="/payment" element={<Payment/>}/>
+        <Route path="/payment-status" element={<PaymentStatus/>}/>
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<UserLogin />} />
@@ -44,6 +62,9 @@ function App() {
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/order-failed" element={<OrderFailed />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* ADMIN */}
         <Route

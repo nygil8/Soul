@@ -72,7 +72,7 @@ const MyAccount = () => {
 
 export default MyAccount;
 
-/* ================= STYLES ================= */
+/*  STYLES  */
 
 const styles = {
   /* DESKTOP (UNCHANGED) */

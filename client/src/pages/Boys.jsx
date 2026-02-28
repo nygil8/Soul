@@ -23,10 +23,42 @@ const categories = [
 ];
 
 const products = [
-  { id: 1, img: p1, age: "0-2 Years", category: "Combo", stock: true },
-  { id: 2, img: p2, age: "0-2 Years", category: "Shirt", stock: true },
-  { id: 3, img: p3, age: "2-6 Years", category: "Hoodies", stock: false },
-  { id: 4, img: p4, age: "7-12 Years", category: "Jeans", stock: true },
+  {
+    id: 1,
+    img: p1,
+    age: "0-2 Years",
+    category: "Combo",
+    name: "Soft Cotton Combo Set",
+    price: 1499,
+    stock: true,
+  },
+  {
+    id: 2,
+    img: p2,
+    age: "0-2 Years",
+    category: "Shirt",
+    name: "Classic Linen Shirt",
+    price: 899,
+    stock: true,
+  },
+  {
+    id: 3,
+    img: p3,
+    age: "2-6 Years",
+    category: "Hoodies",
+    name: "Warm Winter Hoodie",
+    price: 1299,
+    stock: false,
+  },
+  {
+    id: 4,
+    img: p4,
+    age: "7-12 Years",
+    category: "Jeans",
+    name: "Denim Comfort Jeans",
+    price: 1199,
+    stock: true,
+  },
 ];
 
 const Boys = () => {
@@ -137,40 +169,42 @@ const Boys = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10">
           {filteredProducts.map((item) => (
             <div key={item.id} className="group text-center">
               
-              {/* IMAGE WRAPPER */}
-              <div className="relative">
+              {/* IMAGE */}
+              <div className="relative mb-4">
                 <Link to={`/product/${item.id}`}>
                   <img
                     src={item.img}
-                    alt="Product"
-                    className={`
-                      w-full 
-                      h-60 sm:h-72 
-                      object-cover 
-                      rounded-2xl 
-                      mb-3 
-                      transition
-                      ${!item.stock && "opacity-60"}
-                    `}
+                    alt={item.name}
+                    className={`w-full h-64 object-cover rounded-2xl transition
+                      ${!item.stock && "opacity-60"}`}
                   />
                 </Link>
 
-                {/* OUT OF STOCK BADGE */}
                 {!item.stock && (
-                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full tracking-wide">
+                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
                     Out of Stock
                   </span>
                 )}
               </div>
 
+              {/* NAME */}
+              <h3 className="text-sm font-medium mb-1 leading-snug">
+                {item.name}
+              </h3>
+
+              {/* PRICE */}
+              <p className="text-sm text-gray-700 mb-3">
+                ₹{item.price}
+              </p>
+
               {/* ADD TO CART */}
               <Link
                 to="/cart"
-                className={`inline-block px-5 py-2 rounded-full text-sm transition
+                className={`inline-block px-6 py-2 rounded-full text-xs tracking-wide transition
                   ${
                     item.stock
                       ? "bg-[#c6ab9a] hover:opacity-90"

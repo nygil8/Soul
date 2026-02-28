@@ -1,30 +1,81 @@
+import { useState, useEffect } from "react";
+
 const AccountDetails = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div
+        style={{
+          ...styles.container,
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 1.2fr",
+          padding: isMobile ? "20px" : "60px",
+          gap: isMobile ? "30px" : "60px",
+        }}
+      >
         {/* LEFT INFO */}
         <div style={styles.left}>
-          <h1 style={styles.title}>Account Details</h1>
-          <p style={styles.subtitle}>
-            Update your personal information and change your password to keep your account secure.
+          <h1
+            style={{
+              ...styles.title,
+              fontSize: isMobile ? "28px" : "42px",
+              textAlign: isMobile ? "center" : "left",
+            }}
+          >
+            Account Details
+          </h1>
+
+          <p
+            style={{
+              ...styles.subtitle,
+              textAlign: isMobile ? "center" : "left",
+              margin: isMobile ? "0 auto" : "0",
+            }}
+          >
+            Update your personal information and change your password
+            to keep your account secure.
           </p>
         </div>
 
         {/* RIGHT FORM */}
         <div style={styles.right}>
-          <div style={styles.card}>
+          <div
+            style={{
+              ...styles.card,
+              padding: isMobile ? "25px" : "40px",
+              borderRadius: isMobile ? "20px" : "32px",
+            }}
+          >
             <h2 style={styles.cardTitle}>Edit Account</h2>
 
             <form style={styles.form}>
-              <div style={styles.row}>
-                <input style={styles.input} placeholder="Full Name" type="text" name="fullName" />
+              {/* Name + Email Row */}
+              <div
+                style={{
+                  ...styles.row,
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                }}
+              >
                 <input
-                  style={{ ...styles.input, backgroundColor: "#f0f0f0", cursor: "not-allowed" }}
+                  style={styles.input}
+                  placeholder="Full Name"
+                  type="text"
+                />
+
+                {/* ✅ Editable Email */}
+                <input
+                  style={styles.input}
                   placeholder="Email"
                   type="email"
-                  name="email"
-                  disabled
-                  value="user@example.com"
                 />
               </div>
 
@@ -32,10 +83,18 @@ const AccountDetails = () => {
                 style={styles.input}
                 placeholder="New Password"
                 type="password"
-                name="newPassword"
               />
 
-              <button style={styles.button} type="submit">
+              <button
+                style={styles.button}
+                type="submit"
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = "#cc001f")
+                }
+                onMouseOut={(e) =>
+                  (e.target.style.backgroundColor = "#e60023")
+                }
+              >
                 Update Details
               </button>
             </form>
@@ -62,9 +121,6 @@ const styles = {
     width: "100%",
     maxWidth: "1200px",
     display: "grid",
-    gridTemplateColumns: "1fr 1.2fr",
-    gap: "60px",
-    padding: "60px",
   },
 
   left: {
@@ -74,7 +130,6 @@ const styles = {
   },
 
   title: {
-    fontSize: "42px",
     fontWeight: "600",
     marginBottom: "20px",
     color: "#333",
@@ -96,14 +151,12 @@ const styles = {
   card: {
     width: "100%",
     background: "#fff",
-    padding: "40px",
-    borderRadius: "32px",
     boxShadow: "0 30px 60px rgba(0,0,0,0.12)",
   },
 
   cardTitle: {
-    fontSize: "24px",
-    marginBottom: "30px",
+    fontSize: "22px",
+    marginBottom: "25px",
     fontWeight: "500",
     color: "#111",
   },
@@ -116,7 +169,6 @@ const styles = {
 
   row: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
     gap: "16px",
   },
 
@@ -127,6 +179,7 @@ const styles = {
     background: "#fafafa",
     fontSize: "14px",
     outline: "none",
+    width: "100%",
   },
 
   button: {
@@ -134,11 +187,12 @@ const styles = {
     padding: "15px",
     borderRadius: "999px",
     border: "none",
-    background: "#e60023", // Pinterest red accent
+    background: "#e60023",
     color: "#fff",
     fontSize: "14px",
     cursor: "pointer",
     fontWeight: "600",
     transition: "background-color 0.3s ease",
+    width: "100%",
   },
 };

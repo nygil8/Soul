@@ -23,12 +23,44 @@ const categories = [
   "Combo",
 ];
 
-/* PRODUCTS */
+/* PRODUCTS WITH NAME & PRICE */
 const products = [
-  { id: 1, img: g1, age: "0-2 Years", category: "Combo", stock: true },
-  { id: 2, img: g2, age: "0-2 Years", category: "Frocks", stock: true },
-  { id: 3, img: g3, age: "2-6 Years", category: "Party Wear", stock: false },
-  { id: 4, img: g4, age: "7-12 Years", category: "Jeans", stock: true },
+  {
+    id: 1,
+    img: g1,
+    name: "Floral Cotton Frock",
+    price: "₹1,299",
+    age: "0-2 Years",
+    category: "Frocks",
+    stock: true,
+  },
+  {
+    id: 2,
+    img: g2,
+    name: "Peach Party Dress",
+    price: "₹1,899",
+    age: "0-2 Years",
+    category: "Party Wear",
+    stock: true,
+  },
+  {
+    id: 3,
+    img: g3,
+    name: "Denim Skirt Set",
+    price: "₹1,499",
+    age: "2-6 Years",
+    category: "Skirts",
+    stock: false,
+  },
+  {
+    id: 4,
+    img: g4,
+    name: "Classic Blue Jeans",
+    price: "₹1,199",
+    age: "7-12 Years",
+    category: "Jeans",
+    stock: true,
+  },
 ];
 
 const Girls = () => {
@@ -43,7 +75,7 @@ const Girls = () => {
   );
 
   return (
-    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b] flex flex-col">
+    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
 
       {/* TITLE */}
@@ -70,12 +102,11 @@ const Girls = () => {
         ))}
       </section>
 
-      {/* MOBILE FILTER BAR */}
+      {/* MOBILE FILTER HEADER */}
       <section className="md:hidden sticky top-0 z-40 bg-[#f7f1e8] px-6 py-4 flex justify-between items-center border-b border-black/10">
         <span className="text-sm font-medium">
           Category: <b>{activeCategory}</b>
         </span>
-
         <button
           onClick={() => setFilterOpen(true)}
           className="text-3xl leading-none"
@@ -87,7 +118,7 @@ const Girls = () => {
       {/* MOBILE FILTER DRAWER */}
       {filterOpen && (
         <div className="md:hidden fixed inset-0 bg-black/40 z-50">
-          <div className="absolute right-0 top-0 w-3/4 h-full bg-[#f3ecdf] p-6 overflow-y-auto">
+          <div className="absolute right-0 top-0 w-3/4 h-[100dvh] bg-[#f3ecdf] p-6 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-serif text-xl">Categories</h3>
               <button
@@ -119,8 +150,7 @@ const Girls = () => {
       )}
 
       {/* MAIN CONTENT */}
-      <section className="px-6 md:px-24 pb-28 grid md:grid-cols-[240px_1fr] gap-14 flex-1">
-        
+      <section className="px-6 md:px-24 pb-24 grid md:grid-cols-[240px_1fr] gap-14">
         {/* DESKTOP FILTER */}
         <aside className="hidden md:block">
           <ul className="space-y-5 text-lg font-serif">
@@ -139,17 +169,16 @@ const Girls = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
           {filteredProducts.map((item) => (
-            <div key={item.id} className="text-center">
-              
+            <div key={item.id} className="group text-center">
               {/* IMAGE */}
               <div className="relative">
                 <Link to={`/product/${item.id}`}>
                   <img
                     src={item.img}
-                    alt="Product"
-                    className={`w-full aspect-[3/4] object-cover rounded-2xl mb-3 ${
+                    alt={item.name}
+                    className={`w-full h-60 sm:h-72 object-cover rounded-2xl mb-3 ${
                       !item.stock && "opacity-60"
                     }`}
                   />
@@ -162,7 +191,15 @@ const Girls = () => {
                 )}
               </div>
 
-              {/* BUTTON */}
+              {/* NAME */}
+              <h3 className="text-sm font-medium mb-1">
+                {item.name}
+              </h3>
+
+              {/* PRICE */}
+              <p className="text-sm mb-3">{item.price}</p>
+
+              {/* ADD TO CART */}
               <Link
                 to="/cart"
                 className={`inline-block px-5 py-2 rounded-full text-sm transition

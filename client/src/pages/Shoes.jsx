@@ -1,56 +1,50 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-import { Link } from "react-router-dom";
+import shoesData from "../data/shoesData";
 
-import p1 from "../assets/product1.jpg";
-import p2 from "../assets/product2.jpg";
-import p3 from "../assets/product3.jpg";
-
-const ageGroups = ["2-3 Years", "4-6 Years", "7-9 Years", "10-12 Years"];
+const ageGroups = ["1-4 Years", "5-8 Years", "9-12 Years"];
 const types = ["All", "Sneakers", "Boots", "Sandals"];
 
 const ageSizeMap = {
-  "2-3 Years": [13, 14],
-  "4-6 Years": [17, 18, 19, 20, 21],
-  "7-9 Years": [22, 23, 24, 25, 26, 27],
-  "10-12 Years": [28, 29, 30, 31, 32, 33],
+  "1-4 Years": [20, 21, 22, 23, 24],
+  "5-8 Years": [25, 26, 27, 28, 29, 30],
+  "9-12 Years": [30, 31, 32, 33, 34, 35, 36, 37],
 };
 
-const shoes = [
-  { id: 1, img: p1, type: "Sneakers", size: 22, stock: true },
-  { id: 2, img: p2, type: "Boots", size: 28, stock: false },
-  { id: 3, img: p3, type: "Sandals", size: 19, stock: true },
-];
-
 const Shoes = () => {
-  const [activeAge, setActiveAge] = useState("4-6 Years");
+  const [activeAge, setActiveAge] = useState("1-4 Years");
   const [activeType, setActiveType] = useState("All");
 
-  const filteredShoes = shoes.filter((shoe) => {
+  // Convert "1-4 Years" → "1-4"
+  const formatAgeForURL = (age) => {
+    return age.split(" ")[0];
+  };
+
+  const filteredShoes = shoesData.filter((shoe) => {
     const sizeMatch = ageSizeMap[activeAge].includes(shoe.size);
-    const typeMatch =
-      activeType === "All" || shoe.type === activeType;
+    const typeMatch = activeType === "All" || shoe.type === activeType;
     return sizeMatch && typeMatch;
   });
 
   return (
-    <div className="bg-[#f7f1e8] min-h-screen">
+    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
 
       {/* TITLE */}
       <section className="px-6 md:px-24 pt-14">
-        <h1 className="text-4xl font-serif mb-3">Kids Shoes</h1>
+        <h1 className="text-4xl font-serif mb-3">Shoes</h1>
         <div className="h-px bg-black/20" />
       </section>
 
-      {/* AGE FILTER */}
+      {/* AGE TABS */}
       <section className="px-6 md:px-24 py-6 flex gap-3 overflow-x-auto">
         {ageGroups.map((age) => (
           <button
             key={age}
             onClick={() => setActiveAge(age)}
-            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap
+            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
               ${
                 activeAge === age
                   ? "bg-[#c6ab9a] text-white"
@@ -63,12 +57,12 @@ const Shoes = () => {
       </section>
 
       {/* TYPE FILTER */}
-      <section className="px-6 md:px-24 pb-6 flex gap-3 overflow-x-auto">
+      <section className="px-6 md:px-24 pb-8 flex gap-3 overflow-x-auto">
         {types.map((t) => (
           <button
             key={t}
             onClick={() => setActiveType(t)}
-            className={`text-sm px-4 py-2 rounded-full
+            className={`px-4 py-2 rounded-full text-sm transition
               ${
                 activeType === t
                   ? "bg-black text-white"
@@ -80,18 +74,20 @@ const Shoes = () => {
         ))}
       </section>
 
-      {/* PRODUCTS */}
-      <section className="px-6 md:px-24 pb-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+      {/* PRODUCTS GRID */}
+      <section className="px-6 md:px-24 pb-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10">
         {filteredShoes.map((item) => (
-          <div key={item.id} className="text-center">
-            <div className="relative">
-              <img
-                src={item.img}
-                className={`w-full h-56 object-cover rounded-xl ${
-                  !item.stock && "opacity-60"
-                }`}
-                alt=""
-              />
+          <div key={item.id} className="group text-center">
+
+            <div className="relative mb-4">
+              <Link to={`/shoes/${formatAgeForURL(activeAge)}/${item.id}`}>
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className={`w-full h-64 object-cover rounded-2xl transition
+                    ${!item.stock && "opacity-60"}`}
+                />
+              </Link>
 
               {!item.stock && (
                 <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
@@ -100,21 +96,17 @@ const Shoes = () => {
               )}
             </div>
 
-            <p className="text-xs mt-2">
-              Size: {item.size} • {item.type}
+            <h3 className="text-sm font-medium mb-1 leading-snug">
+              {item.name}
+            </h3>
+
+            <p className="text-sm text-gray-700 mb-1">
+              ₹{item.price}
             </p>
 
-            <button
-              disabled={!item.stock}
-              className={`mt-2 px-5 py-2 rounded-full text-sm
-                ${
-                  item.stock
-                    ? "bg-[#c6ab9a]"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-            >
-              Add to Cart
-            </button>
+            <p className="text-xs text-black/60">
+              Size {item.size} • {item.type}
+            </p>
           </div>
         ))}
       </section>

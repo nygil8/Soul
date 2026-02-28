@@ -6,9 +6,11 @@ const Footer = () => {
       
       {/* LINKS */}
       <div className="flex flex-col items-center gap-4 text-sm">
-        <Link to="/home" className="hover:underline">
+        <Link 
+         to="/" 
+         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           Home
-        </Link>
+             </Link>
 
         <Link to="/about" className="hover:underline">
           About Us
