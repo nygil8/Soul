@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-import { AnimatePresence } from "framer-motion";
 
 /* USER */
 import Home from "./pages/Home";
@@ -17,9 +15,6 @@ import Girls from "./pages/Girls";
 import Shoes from "./pages/Shoes";
 import Accessories from "./pages/Accessories";
 import ProductDetails from "./pages/ProductDetails";
-import Search from "./pages/Search";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
 /* ADMIN */
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -30,8 +25,9 @@ import CustomerManagement from "./components/dashboard/CustomerManagement";
 import ReviewManagement from "./components/dashboard/ReviewManagement";
 import Profile from "./components/Profile";
 
+
 function AnimatedRoutes() {
-  const location = useLocation();
+  const location = useLocations();
 
   return (
     <AnimatePresence mode="wait">
@@ -43,9 +39,6 @@ function AnimatedRoutes() {
         <Route path="/shoes" element={<Shoes />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/Product/:id" element={<ProductDetails />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<UserLogin />} />
@@ -54,6 +47,9 @@ function AnimatedRoutes() {
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/order-failed" element={<OrderFailed />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* ADMIN */}
         <Route

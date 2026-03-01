@@ -1,71 +1,38 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../utils/api";
-import toast from "react-hot-toast";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  // const [error, setError] = useState(''); // Removed in favor of toast
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.type === 'text' || e.target.type === 'email' ? 'email' : 'password']: e.target.value });
-  };
-  // Note: The input for username/email has type="text" but we map it to 'email' in state for simplicity, 
-  // or we need to handle both. The backend likely expects 'email' or 'username'.
-  // Looking at authController (Step 269), it checks { $or: [{ email }, { username }] }. 
-  // So we can send 'email' prop with the value, even if it's a username.
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      // API call same as Admin Login
-      const res = await api.post('/auth/login', formData);
-      console.log('DEBUG: Full Login Response:', res); // Log the full response object
-      console.log('DEBUG: Response Data:', res.data); // Log just the data
-
-      if (!res.data || !res.data.user) {
-        console.error('CRITICAL: User data missing in response!', res);
-        throw new Error('Server response missing user data');
-      }
-
-      // Filter PII for storage
-      const userForStorage = {
-        id: res.data.user.id,
-        username: res.data.user.username,
-        role: res.data.user.role,
-        profilePhoto: res.data.user.profilePhoto
-      };
-      localStorage.setItem('user', JSON.stringify(userForStorage));
-
-      toast.success("Welcome back!");
-      // Redirect based on role
-      if (res.data.user.role === 'admin') {
-        navigate('/dashboard');
-      } else {
-        navigate('/'); // Redirect users to home
-      }
-
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || 'Login failed.');
-    }
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fdf0e3] text-black">
+      
       {/* Header */}
       <header className="bg-[#f3efe3] py-4 px-6 flex justify-between items-center">
-        <h1 className="text-xl font-semibold tracking-widest cursor-pointer" onClick={() => navigate('/')}>E-KID</h1>
+        <h1 
+          onClick={() => navigate("/")}
+          className="text-xl font-semibold tracking-widest cursor-pointer"
+        >
+          E-KID
+        </h1>
         <div className="flex gap-5 text-xl">
-          <span>🔍</span>
-          <span>👤</span>
-          <span>🛒</span>
+          <span className="cursor-pointer">🔍</span>
+          <span 
+            onClick={() => navigate("/login")}
+            className="cursor-pointer"
+          >
+            👤
+          </span>
+          <span 
+            onClick={() => navigate("/cart")}
+            className="cursor-pointer"
+          >
+            🛒
+          </span>
         </div>
       </header>
 
@@ -96,7 +63,9 @@ const Login = () => {
               className="w-full border border-black px-4 py-3 bg-transparent focus:outline-none"
               required
             />
-            <p className="text-sm mt-2 cursor-pointer">Forgot Password?</p>
+            <p className="text-sm mt-2 cursor-pointer hover:underline">
+              Forgot Password?
+            </p>
           </div>
 
           <div className="flex justify-center pt-4">
@@ -110,7 +79,7 @@ const Login = () => {
         </form>
 
         {/* Google Login */}
-        <button className="mt-10 flex items-center gap-3 bg-[#4285F4] text-white px-6 py-2 rounded-full shadow hover:opacity-90">
+        <button className="mt-10 flex items-center gap-3 bg-[#4285F4] text-white px-6 py-2 rounded-full shadow hover:opacity-90 transition">
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
             alt="google"
@@ -121,32 +90,61 @@ const Login = () => {
 
         {/* Register */}
         <p className="mt-8">
-          Not a member ?{" "}
-          <a href="/register" className="text-blue-600 font-medium hover:underline">
+          Not a member?{" "}
+          <Link to="/register" className="text-blue-600 font-medium">
             Register
-          </a>
+          </Link>
         </p>
       </main>
 
       {/* Footer */}
       <footer className="bg-[#b79a89] py-16 text-center text-white">
         <div className="space-y-6 text-lg">
-          <p className="cursor-pointer hover:underline">Home</p>
-          <p className="cursor-pointer hover:underline">About Us</p>
-          <p className="cursor-pointer hover:underline">Contact Us</p>
-          <p className="cursor-pointer hover:underline">My Account</p>
-          <p className="cursor-pointer hover:underline">Refund Policy</p>
-          <p className="cursor-pointer hover:underline">Privacy Policy</p>
-          <p className="cursor-pointer hover:underline">Shipping Policy</p>
+
+          <Link to="/" className="block hover:underline">
+            Home
+          </Link>
+
+          <Link to="/about" className="block hover:underline">
+            About Us
+          </Link>
+
+          <Link to="/contact" className="block hover:underline">
+            Contact Us
+          </Link>
+
+          <Link to="/my-account" className="block hover:underline">
+            My Account
+          </Link>
+
+          <Link to="/refund-policy" className="block hover:underline">
+            Refund Policy
+          </Link>
+
+          <Link to="/privacy-policy" className="block hover:underline">
+            Privacy Policy
+          </Link>
+
+          <Link to="/shipping-policy" className="block hover:underline">
+            Shipping Policy
+          </Link>
+
         </div>
 
+        {/* Social Icons */}
         <div className="flex justify-center gap-6 mt-10 text-2xl">
           <span className="cursor-pointer">📸</span>
           <span className="cursor-pointer">🌐</span>
         </div>
 
+        {/* Scroll To Top */}
         <div className="flex justify-end pr-6 mt-6">
-          <span className="text-2xl cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</span>
+          <span
+            onClick={scrollToTop}
+            className="text-2xl cursor-pointer hover:scale-110 transition"
+          >
+            ⬆
+          </span>
         </div>
       </footer>
     </div>

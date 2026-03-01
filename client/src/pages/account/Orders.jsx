@@ -1,28 +1,13 @@
-import { useState, useEffect } from "react";
-import api from "../../utils/api";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await api.get('/orders/myorders');
-        if (res.data.success) {
-          setOrders(res.data.data || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch orders", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOrders();
+    const savedOrders =
+      JSON.parse(localStorage.getItem("orders")) || [];
+    setOrders(savedOrders);
   }, []);
-
-  if (loading) return <div>Loading orders...</div>;
 
   return (
     <div style={styles.wrapper}>
@@ -41,19 +26,40 @@ const Orders = () => {
       ) : (
         <div style={styles.grid}>
           {orders.map((order) => (
-            <div key={order._id} style={styles.card}>
+            <div key={order.id} style={styles.card}>
+              
+              {/* Header */}
               <div style={styles.cardHeader}>
-                <span style={styles.orderId}>Order #{order._id.slice(-6).toUpperCase()}</span>
-                <span style={styles.status}>{order.status}</span>
+                <span style={styles.orderId}>
+                  Order #{order.id}
+                </span>
+                <span style={styles.status}>
+                  {order.status}
+                </span>
               </div>
 
+              {/* Body */}
               <div style={styles.cardBody}>
-                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                <p>Total: ₹{order.orderDetails?.totalAmount}</p>
-                <p>Items: {order.orderDetails?.items?.length}</p>
+                <p><strong>Date:</strong> {order.date}</p>
+                <p><strong>Payment ID:</strong> {order.paymentId}</p>
+                <p><strong>Total:</strong> ₹{order.total}</p>
+
+                {/* Ordered Items */}
+                <div style={{ marginTop: "12px" }}>
+                  {order.items && order.items.map((item, index) => (
+                    <div key={index} style={styles.itemRow}>
+                      <span>{item.name}</span>
+                      <span>
+                        {item.qty} × ₹{item.price}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <button style={styles.viewBtn}>View Details</button>
+              <button style={styles.viewBtn}>
+                View Details
+              </button>
             </div>
           ))}
         </div>
@@ -64,15 +70,22 @@ const Orders = () => {
 
 export default Orders;
 
+
+/* ================= STYLES ================= */
+
 const styles = {
   wrapper: {
     width: "100%",
+    minHeight: "100vh",
+    padding: "40px 20px",
+    background: "linear-gradient(135deg, #f7f1e8, #efe6d8)",
+    fontFamily: "Inter, sans-serif",
   },
 
   heading: {
-    fontSize: "26px",
+    fontSize: "28px",
     fontWeight: "600",
-    marginBottom: "24px",
+    marginBottom: "30px",
   },
 
   emptyState: {
@@ -102,7 +115,7 @@ const styles = {
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
     gap: "20px",
   },
 
@@ -138,6 +151,15 @@ const styles = {
     fontSize: "13px",
     lineHeight: "1.6",
     marginBottom: "16px",
+  },
+
+  itemRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    fontSize: "12px",
+    marginTop: "6px",
+    borderBottom: "1px solid #eee",
+    paddingBottom: "4px",
   },
 
   viewBtn: {

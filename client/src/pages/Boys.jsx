@@ -5,8 +5,13 @@ import Footer from "../components/common/Footer";
 import ProductSkeleton from "../components/common/ProductSkeleton";
 import api from "../utils/api";
 
-// Matches DB 'ageType' enum
-const ageTabs = ["0-2 Yrs", "3-6 Yrs", "7-12 Yrs"];
+/* TEMP IMAGES */
+import p1 from "../assets/product1.jpg";
+import p2 from "../assets/product2.jpg";
+import p3 from "../assets/product3.jpg";
+import p4 from "../assets/product4.jpg";
+
+const ageTabs = ["0-1 Years", "1-6 Years", "7-12 Years"];
 
 const categories = [
   "All",
@@ -147,62 +152,53 @@ const Boys = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        {loading ? (
-          <ProductSkeleton count={8} />
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-            {filteredProducts.length === 0 ? (
-              <div className="col-span-full text-center py-10 text-gray-500">No products found for this category.</div>
-            ) : (
-              filteredProducts.map((item) => (
-                <div key={item._id} className="group text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10">
+          {filteredProducts.map((item) => (
+            <div key={item.id} className="group text-center">
+              
+              {/* IMAGE */}
+              <div className="relative mb-4">
+                <Link to={`/product/${item.id}`}>
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className={`w-full h-64 object-cover rounded-2xl transition
+                      ${!item.stock && "opacity-60"}`}
+                  />
+                </Link>
 
-                  {/* IMAGE WRAPPER */}
-                  <div className="relative">
-                    <Link to={`/product/${item._id}`}>
-                      <img
-                        src={item.image || "https://via.placeholder.com/300?text=No+Image"}
-                        alt={item.name}
-                        className={`
-                          w-full 
-                          h-60 sm:h-72 
-                          object-cover 
-                          rounded-2xl 
-                          mb-3 
-                          transition
-                          ${!item.stock > 0 && "opacity-60"}
-                        `}
-                      />
-                    </Link>
+                {!item.stock && (
+                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
+                    Out of Stock
+                  </span>
+                )}
+              </div>
 
-                    {/* OUT OF STOCK BADGE */}
-                    {(!item.stock || item.stock <= 0) && (
-                      <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full tracking-wide">
-                        Out of Stock
-                      </span>
-                    )}
-                  </div>
+              {/* NAME */}
+              <h3 className="text-sm font-medium mb-1 leading-snug">
+                {item.name}
+              </h3>
 
-                  {/* INFO */}
-                  <h3 className="font-medium text-lg">{item.name}</h3>
-                  <p className="text-gray-600">₹{item.price}</p>
+              {/* PRICE */}
+              <p className="text-sm text-gray-700 mb-3">
+                ₹{item.price}
+              </p>
 
-                  {/* VIEW DETAILS / ADD TO CART */}
-                  <Link
-                    to={`/product/${item._id}`}
-                    className={`inline-block px-5 py-2 rounded-full text-sm transition mt-2
-                      ${item.stock > 0
-                        ? "bg-[#c6ab9a] hover:opacity-90"
-                        : "bg-gray-400 cursor-not-allowed pointer-events-none"
-                      }`}
-                  >
-                    View Details
-                  </Link>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+              {/* ADD TO CART */}
+              <Link
+                to="/cart"
+                className={`inline-block px-6 py-2 rounded-full text-xs tracking-wide transition
+                  ${
+                    item.stock
+                      ? "bg-[#c6ab9a] hover:opacity-90"
+                      : "bg-gray-400 cursor-not-allowed pointer-events-none"
+                  }`}
+              >
+                Add to Cart
+              </Link>
+            </div>
+          ))}
+        </div>
       </section>
 
       <Footer />

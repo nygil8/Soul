@@ -1,77 +1,50 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-import { Link } from "react-router-dom";
-import api from "../utils/api";
+import shoesData from "../data/shoesData";
 
-const ageGroups = ["2-3 Yrs", "4-6 Yrs", "7-9 Yrs", "10-12 Yrs"];
-// Note: DB likely uses 'ageType' matching these strings if updated, or generic age ranges. 
-// For now, matching the frontend tabs to what was there, assuming DB data uses 'ageType' string.
-
+const ageGroups = ["1-4 Years", "5-8 Years", "9-12 Years"];
 const types = ["All", "Sneakers", "Boots", "Sandals"];
 
+const ageSizeMap = {
+  "1-4 Years": [20, 21, 22, 23, 24],
+  "5-8 Years": [25, 26, 27, 28, 29, 30],
+  "9-12 Years": [30, 31, 32, 33, 34, 35, 36, 37],
+};
+
 const Shoes = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeAge, setActiveAge] = useState("4-6 Yrs");
+  const [activeAge, setActiveAge] = useState("1-4 Years");
   const [activeType, setActiveType] = useState("All");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await api.get('/products');
-        if (res.data.success) {
-          // Filter for Shoes category OR sub-cat matching logic if structured differently.
-          // Assuming 'Shoes' is a primary category or filterable attribute.
-          const shoesProducts = res.data.data.filter(p =>
-            p.category === 'Shoes' || p.category === 'Footwear'
-            // Fallback: If DB uses specific types as categories (e.g. 'Sneakers'), we might need broader check.
-            // For now, filtering by what seems logical for a main 'Shoes' page.
-          );
-          setProducts(shoesProducts);
-        }
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
+  // Convert "1-4 Years" → "1-4"
+  const formatAgeForURL = (age) => {
+    return age.split(" ")[0];
+  };
 
-  const filteredShoes = products.filter((shoe) => {
-    // Age filter (Optional: if DB has ageType. If not, this might filter out everything if data is missing)
-    // Relaxing logical strictness: If shoe.ageType is undefined, show it? Or strict match?
-    // Going with strict match on 'ageType' to align with Boys/Girls pages.
-    const ageMatch = !activeAge || shoe.ageType === activeAge || shoe.ageType === 'All';
-
-    // Type/Sub-Category filter
-    // Assuming 'name' or 'description' contains the type, OR 'category' is the specific type.
-    // If 'category' is 'Shoes', we need another field for 'Sneakers'. 
-    // Usually 'category' = 'Sneakers', and we group them into 'Shoes' page.
-    // Let's refine the fetch logic above to include these sub-types if they are categories.
-    const typeMatch = activeType === "All" || shoe.name.includes(activeType) || shoe.category === activeType;
-
-    return ageMatch && typeMatch;
+  const filteredShoes = shoesData.filter((shoe) => {
+    const sizeMatch = ageSizeMap[activeAge].includes(shoe.size);
+    const typeMatch = activeType === "All" || shoe.type === activeType;
+    return sizeMatch && typeMatch;
   });
 
   return (
-    <div className="bg-[#f7f1e8] min-h-screen">
+    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
 
       {/* TITLE */}
       <section className="px-6 md:px-24 pt-14">
-        <h1 className="text-4xl font-serif mb-3">Kids Shoes</h1>
+        <h1 className="text-4xl font-serif mb-3">Shoes</h1>
         <div className="h-px bg-black/20" />
       </section>
 
-      {/* AGE FILTER */}
+      {/* AGE TABS */}
       <section className="px-6 md:px-24 py-6 flex gap-3 overflow-x-auto">
         {ageGroups.map((age) => (
           <button
             key={age}
             onClick={() => setActiveAge(age)}
-            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap
+            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
               ${activeAge === age
                 ? "bg-[#c6ab9a] text-white"
                 : "bg-[#eee4d7]"
@@ -83,12 +56,12 @@ const Shoes = () => {
       </section>
 
       {/* TYPE FILTER */}
-      <section className="px-6 md:px-24 pb-6 flex gap-3 overflow-x-auto">
+      <section className="px-6 md:px-24 pb-8 flex gap-3 overflow-x-auto">
         {types.map((t) => (
           <button
             key={t}
             onClick={() => setActiveType(t)}
-            className={`text-sm px-4 py-2 rounded-full
+            className={`px-4 py-2 rounded-full text-sm transition
               ${activeType === t
                 ? "bg-black text-white"
                 : "bg-white"
@@ -99,48 +72,45 @@ const Shoes = () => {
         ))}
       </section>
 
-      {/* PRODUCTS */}
-      <section className="px-6 md:px-24 pb-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-        {loading ? (
-          <div>Loading...</div>
+      {/* PRODUCTS GRID */}
+      <section className="px-6 md:px-24 pb-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10">
+        {filteredShoes.length === 0 ? (
+          <div className="col-span-full text-center text-gray-500">No shoes found.</div>
         ) : (
-          filteredShoes.length === 0 ? (
-            <div className="col-span-full text-center text-gray-500">No shoes found.</div>
-          ) : (
-            filteredShoes.map((item) => (
-              <div key={item._id} className="text-center">
-                <div className="relative">
-                  <Link to={`/product/${item._id}`}>
-                    <img
-                      src={item.image || "https://via.placeholder.com/300"}
-                      className={`w-full h-56 object-cover rounded-xl ${(!item.stock || item.stock <= 0) && "opacity-60"
-                        }`}
-                      alt={item.name}
-                    />
-                  </Link>
+          filteredShoes.map((item) => (
+            <div key={item.id} className="group text-center">
 
-                  {(!item.stock || item.stock <= 0) && (
-                    <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
-                      Out of Stock
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-xs mt-2 font-bold uppercase">{item.name}</p>
-
-                <Link
-                  to={`/product/${item._id}`}
-                  className={`inline-block mt-2 px-5 py-2 rounded-full text-sm
-                    ${item.stock > 0
-                      ? "bg-[#c6ab9a] hover:opacity-90"
-                      : "bg-gray-400 cursor-not-allowed pointer-events-none"
-                    }`}
-                >
-                  View Details
+              <div className="relative mb-4">
+                <Link to={`/shoes/${formatAgeForURL(activeAge)}/${item.id}`}>
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className={`w-full h-64 object-cover rounded-2xl transition
+                      ${!item.stock && "opacity-60"}`}
+                  />
                 </Link>
+
+                {(!item.stock || item.stock <= 0) && (
+                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
+                    Out of Stock
+                  </span>
+                )}
               </div>
-            ))
-          ))}
+
+              <h3 className="text-sm font-medium mb-1 leading-snug">
+                {item.name}
+              </h3>
+
+              <p className="text-sm text-gray-700 mb-1">
+                ₹{item.price}
+              </p>
+
+              <p className="text-xs text-black/60">
+                Size {item.size} • {item.type}
+              </p>
+            </div>
+          ))
+        )}
       </section>
 
       <Footer />

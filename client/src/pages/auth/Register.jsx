@@ -1,51 +1,10 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../utils/api";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { username, email, password, confirmPassword } = formData;
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const res = await api.post("/auth/register", formData);
-      if (res.data.success) {
-        // Save user data (Token is handled by cookie usually, but we also save user info)
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-
-        // Redirect to home
-        navigate("/");
-      }
-    } catch (err) {
-      console.error("Registration Error:", err);
-      const msg = err.response?.data?.message || "Registration failed";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -54,11 +13,34 @@ const Register = () => {
       {/* Header */}
       <header className="bg-[#f3efe3] border-b">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-semibold tracking-widest">E-KID</Link>
+          <h1
+            onClick={() => navigate("/")}
+            className="text-xl font-semibold tracking-widest cursor-pointer"
+          >
+            E-KID
+          </h1>
+
           <nav className="flex gap-6 text-lg">
-            <span className="cursor-pointer">🔍</span>
-            <span className="cursor-pointer">👤</span>
-            <span className="cursor-pointer">🛒</span>
+            <span
+              onClick={() => navigate("/search")}
+              className="cursor-pointer"
+            >
+              🔍
+            </span>
+
+            <span
+              onClick={() => navigate("/login")}
+              className="cursor-pointer"
+            >
+              👤
+            </span>
+
+            <span
+              onClick={() => navigate("/cart")}
+              className="cursor-pointer"
+            >
+              🛒
+            </span>
           </nav>
         </div>
       </header>
@@ -70,17 +52,13 @@ const Register = () => {
           <h2 className="text-3xl font-semibold text-center mb-2">
             Create Account
           </h2>
+
           <p className="text-center text-sm text-gray-600 mb-10">
             Join E-KID to explore the latest kids fashion
           </p>
 
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
+          <form className="space-y-6">
 
-          <form className="space-y-6" onSubmit={onSubmit}>
             {/* Username */}
             <div>
               <label className="block text-sm mb-1">Username</label>
@@ -159,26 +137,62 @@ const Register = () => {
             >
               {loading ? 'Creating Account...' : 'Register'}
             </button>
+
           </form>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="bg-[#b79a89] py-14">
+
         <div className="max-w-6xl mx-auto text-center space-y-4 text-lg">
-          <p>Home</p>
-          <p>About Us</p>
-          <p>Contact Us</p>
-          <p>My Account</p>
-          <p>Refund Policy</p>
-          <p>Privacy Policy</p>
-          <p>Shipping Policy</p>
+
+          <Link to="/" className="block hover:underline">
+            Home
+          </Link>
+
+          <Link to="/about" className="block hover:underline">
+            About Us
+          </Link>
+
+          <Link to="/contact" className="block hover:underline">
+            Contact Us
+          </Link>
+
+          <Link to="/my-account" className="block hover:underline">
+            My Account
+          </Link>
+
+          <Link to="/refund-policy" className="block hover:underline">
+            Refund Policy
+          </Link>
+
+          <Link to="/privacy-policy" className="block hover:underline">
+            Privacy Policy
+          </Link>
+
+          <Link to="/shipping-policy" className="block hover:underline">
+            Shipping Policy
+          </Link>
+
         </div>
 
+        {/* Social Icons */}
         <div className="flex justify-center gap-6 mt-8 text-2xl">
-          <span>📸</span>
-          <span>🌐</span>
+          <span className="cursor-pointer">📸</span>
+          <span className="cursor-pointer">🌐</span>
         </div>
+
+        {/* Scroll Top */}
+        <div className="flex justify-end pr-6 mt-6">
+          <span
+            onClick={scrollToTop}
+            className="text-2xl cursor-pointer hover:scale-110 transition"
+          >
+            ⬆
+          </span>
+        </div>
+
       </footer>
     </div>
   );

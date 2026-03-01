@@ -1,62 +1,148 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-import toast from "react-hot-toast";
+import { useState } from "react";
 
 const Checkout = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        address: "123 Test St",
-        city: "Test City",
-        state: "TS",
-        postalCode: "123456",
-        country: "India",
-        phone: "9999999999"
-    });
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const [agree, setAgree] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await api.post('/orders', { shippingAddress: formData });
-            if (res.data.success) {
-                toast.success("Order placed successfully! 🎉");
-                navigate('/my-account'); // or order success
-            }
-        } catch (error) {
-            console.error("Checkout failed", error);
-            toast.error(error.response?.data?.message || "Checkout failed");
-        }
-    };
+  return (
+    <div className="bg-[#f3e8dc] min-h-screen text-[#2d2d2d]">
+      <Navbar />
 
-    return (
-        <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
-            <Navbar />
-            <div className="max-w-2xl mx-auto py-10 px-6">
-                <h1 className="text-3xl font-serif mb-8">Checkout</h1>
-                <form onSubmit={handleSubmit} className="space-y-4 bg-white p-8 rounded-2xl shadow-sm">
-                    <input name="address" value={formData.address} onChange={handleChange} placeholder="Address" className="w-full border p-3 rounded" required />
-                    <input name="city" value={formData.city} onChange={handleChange} placeholder="City" className="w-full border p-3 rounded" required />
-                    <div className="grid grid-cols-2 gap-4">
-                        <input name="state" value={formData.state} onChange={handleChange} placeholder="State" className="w-full border p-3 rounded" required />
-                        <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code" className="w-full border p-3 rounded" required />
-                    </div>
-                    <input name="country" value={formData.country} onChange={handleChange} placeholder="Country" className="w-full border p-3 rounded" required />
-                    <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" className="w-full border p-3 rounded" required />
+      <section className="px-6 md:px-20 lg:px-32 py-16">
 
-                    <button type="submit" className="w-full bg-[#c6ab9a] text-white py-3 rounded-full font-bold hover:opacity-90 transition">
-                        Place Order
-                    </button>
-                </form>
+        {/* Title */}
+        <h1 className="text-4xl md:text-5xl font-serif mb-14">
+          Payment Process
+        </h1>
+
+        {/* Layout */}
+        <div className="flex flex-col lg:flex-row gap-16">
+
+          {/* ================= LEFT FORM ================= */}
+          <div className="flex-1 space-y-6">
+
+            {/* Name */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <input
+                type="text"
+                placeholder="First Name"
+                className="p-4 bg-white border border-black/10 rounded-lg focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="p-4 bg-white border border-black/10 rounded-lg focus:outline-none"
+              />
             </div>
-            <Footer />
+
+            {/* Address */}
+            <input
+              type="text"
+              placeholder="House number and street name"
+              className="w-full p-4 bg-white border border-black/10 rounded-lg"
+            />
+
+            <input
+              type="text"
+              placeholder="Apartment, suite, unit (optional)"
+              className="w-full p-4 bg-white border border-black/10 rounded-lg"
+            />
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <input
+                type="text"
+                placeholder="Town / City"
+                className="p-4 bg-white border border-black/10 rounded-lg"
+              />
+              <input
+                type="text"
+                placeholder="State"
+                className="p-4 bg-white border border-black/10 rounded-lg"
+              />
+            </div>
+
+            <input
+              type="text"
+              placeholder="Pincode"
+              className="w-full p-4 bg-white border border-black/10 rounded-lg"
+            />
+
+            <input
+              type="text"
+              placeholder="Phone"
+              className="w-full p-4 bg-white border border-black/10 rounded-lg"
+            />
+
+            <input
+              type="email"
+              placeholder="Email address"
+              className="w-full p-4 bg-white border border-black/10 rounded-lg"
+            />
+
+          </div>
+
+          {/* ================= RIGHT ORDER SUMMARY ================= */}
+          <div className="lg:w-[420px] bg-[#e8d8c7] p-10 rounded-2xl h-fit shadow-sm">
+
+            <h2 className="text-2xl font-serif mb-8">
+              Your Order
+            </h2>
+
+            <div className="flex justify-between mb-4">
+              <span>Boy’s Cotton Shirt and Pant</span>
+              <span>₹ 1,897</span>
+            </div>
+
+            <div className="flex justify-between mb-4">
+              <span>Subtotal</span>
+              <span>₹ 1,897</span>
+            </div>
+
+            <div className="flex justify-between mb-4">
+              <span>Shipping</span>
+              <span>Free Shipping</span>
+            </div>
+
+            <div className="border-t border-black/20 my-6"></div>
+
+            <div className="flex justify-between text-lg font-semibold mb-8">
+              <span>Total</span>
+              <span>₹ 1,897</span>
+            </div>
+
+            {/* Agreement */}
+            <div className="flex items-start gap-3 mb-6 text-sm">
+              <input
+                type="checkbox"
+                checked={agree}
+                onChange={() => setAgree(!agree)}
+                className="mt-1"
+              />
+              <p>
+                I have read and agree to the website terms and conditions
+              </p>
+            </div>
+
+            <button
+              disabled={!agree}
+              onClick={() => navigate("/payment")}
+              className={`w-full py-4 rounded-full text-white text-sm tracking-wide transition 
+              ${agree ? "bg-[#b18a75] hover:opacity-90" : "bg-gray-400 cursor-not-allowed"}`}
+            >
+              Place Order
+            </button>
+          </div>
+
         </div>
-    );
+      </section>
+
+      <Footer />
+    </div>
+  );
 };
 
 export default Checkout;

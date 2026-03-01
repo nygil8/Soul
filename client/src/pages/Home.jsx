@@ -237,34 +237,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* WHY BUY FROM US */}
-        <section className="px-8 md:px-24 py-28 bg-white">
-          <div className="grid md:grid-cols-2 gap-20 items-center">
-            <motion.img
-              variants={smoothLeft}
-              initial="hidden"
-              whileInView="visible"
-              src={aboutImg}
-              alt="Why Buy From Us"
-              className="rounded-3xl shadow-xl w-full object-cover"
-            />
-
-            <motion.div
-              variants={smoothRight}
-              initial="hidden"
-              whileInView="visible"
-              className="bg-[#f3ecdf] p-12 rounded-3xl"
-            >
-              <h3 className="text-3xl font-serif mb-6">Why Buy From Us</h3>
-              <p className="text-sm text-gray-700">
-                Parents trust E-KID for quality, kids love us for comfort.
-                Every outfit is crafted to support movement, play, and joyful
-                childhood moments.
-              </p>
-            </motion.div>
-          </div>
-        </section>
-
         <Footer />
       </div>
     </PageTransition>

@@ -5,7 +5,7 @@ import Footer from "../components/common/Footer";
 import api from "../utils/api";
 
 /* AGE GROUPS */
-const ageTabs = ["0-2 Yrs", "3-6 Yrs", "7-12 Yrs"];
+const ageTabs = ["0-1 Years", "1-6 Years", "7-12 Years"];
 
 /* CATEGORIES */
 const categories = [
@@ -18,10 +18,48 @@ const categories = [
   "Combo",
 ];
 
+/* PRODUCTS WITH NAME & PRICE */
+const products = [
+  {
+    id: 1,
+    img: g1,
+    name: "Floral Cotton Frock",
+    price: "₹1,299",
+    age: "0-1 Years",
+    category: "Frocks",
+    stock: true,
+  },
+  {
+    id: 2,
+    img: g2,
+    name: "Peach Party Dress",
+    price: "₹1,899",
+    age: "0-1 Years",
+    category: "Party Wear",
+    stock: true,
+  },
+  {
+    id: 3,
+    img: g3,
+    name: "Denim Skirt Set",
+    price: "₹1,499",
+    age: "1-6 Years",
+    category: "Skirts",
+    stock: false,
+  },
+  {
+    id: 4,
+    img: g4,
+    name: "Classic Blue Jeans",
+    price: "₹1,199",
+    age: "7-12 Years",
+    category: "Jeans",
+    stock: true,
+  },
+];
+
 const Girls = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeAge, setActiveAge] = useState("0-2 Yrs");
+  const [activeAge, setActiveAge] = useState("0-1 Years");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -52,7 +90,7 @@ const Girls = () => {
   );
 
   return (
-    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b] flex flex-col">
+    <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
 
       {/* TITLE */}
@@ -78,12 +116,11 @@ const Girls = () => {
         ))}
       </section>
 
-      {/* MOBILE FILTER BAR */}
+      {/* MOBILE FILTER HEADER */}
       <section className="md:hidden sticky top-0 z-40 bg-[#f7f1e8] px-6 py-4 flex justify-between items-center border-b border-black/10">
         <span className="text-sm font-medium">
           Category: <b>{activeCategory}</b>
         </span>
-
         <button
           onClick={() => setFilterOpen(true)}
           className="text-3xl leading-none"
@@ -95,7 +132,7 @@ const Girls = () => {
       {/* MOBILE FILTER DRAWER */}
       {filterOpen && (
         <div className="md:hidden fixed inset-0 bg-black/40 z-50">
-          <div className="absolute right-0 top-0 w-3/4 h-full bg-[#f3ecdf] p-6 overflow-y-auto">
+          <div className="absolute right-0 top-0 w-3/4 h-[100dvh] bg-[#f3ecdf] p-6 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-serif text-xl">Categories</h3>
               <button
@@ -126,8 +163,7 @@ const Girls = () => {
       )}
 
       {/* MAIN CONTENT */}
-      <section className="px-6 md:px-24 pb-28 grid md:grid-cols-[240px_1fr] gap-14 flex-1">
-
+      <section className="px-6 md:px-24 pb-24 grid md:grid-cols-[240px_1fr] gap-14">
         {/* DESKTOP FILTER */}
         <aside className="hidden md:block">
           <ul className="space-y-5 text-lg font-serif">
@@ -145,54 +181,43 @@ const Girls = () => {
         </aside>
 
         {/* PRODUCTS GRID */}
-        {loading ? (
-          <div>Loading products...</div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredProducts.length === 0 ? (
-              <div className="col-span-full text-center py-10 text-gray-500">No products found for this category.</div>
-            ) : (
-              filteredProducts.map((item) => (
-                <div key={item._id} className="text-center">
-
-                  {/* IMAGE */}
-                  <div className="relative">
-                    <Link to={`/product/${item._id}`}>
-                      <img
-                        src={item.image || "https://via.placeholder.com/300?text=No+Image"}
-                        alt={item.name}
-                        className={`w-full aspect-[3/4] object-cover rounded-2xl mb-3 ${(!item.stock || item.stock <= 0) && "opacity-60"
-                          }`}
-                      />
-                    </Link>
-
-                    {(!item.stock || item.stock <= 0) && (
-                      <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
-                        Out of Stock
-                      </span>
-                    )}
-                  </div>
-
-                  {/* INFO */}
-                  <h3 className="font-medium text-lg">{item.name}</h3>
-                  <p className="text-gray-600">₹{item.price}</p>
-
-                  {/* BUTTON */}
-                  <Link
-                    to={`/product/${item._id}`}
-                    className={`inline-block px-5 py-2 rounded-full text-sm transition mt-2
-                      ${item.stock > 0
-                        ? "bg-[#c6ab9a] hover:opacity-90"
-                        : "bg-gray-400 pointer-events-none"
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+          {filteredProducts.map((item) => (
+            <div key={item.id} className="group text-center">
+              {/* IMAGE */}
+              <div className="relative mb-4">
+                <Link to={`/product/${item._id || item.id}`}>
+                  <img
+                    src={item.image || item.img || "https://via.placeholder.com/300?text=No+Image"}
+                    alt={item.name}
+                    className={`w-full h-60 sm:h-72 object-cover rounded-2xl mb-3 ${(!item.stock || item.stock <= 0) && "opacity-60"
                       }`}
-                  >
-                    View Details
-                  </Link>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+                  />
+                </Link>
+              </div>
+
+              {/* NAME */}
+              <h3 className="text-sm font-medium mb-1">
+                {item.name}
+              </h3>
+
+              {/* PRICE */}
+              <p className="text-sm mb-3">{item.price}</p>
+
+              {/* ADD TO CART */}
+              <Link
+                to="/cart"
+                className={`inline-block px-5 py-2 rounded-full text-sm transition
+                  ${item.stock
+                    ? "bg-[#c6ab9a] hover:opacity-90"
+                    : "bg-gray-400 pointer-events-none"
+                  }`}
+              >
+                Add to Cart
+              </Link>
+            </div>
+          ))}
+        </div>
       </section>
 
       <Footer />

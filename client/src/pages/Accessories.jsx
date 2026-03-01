@@ -4,6 +4,12 @@ import Footer from "../components/common/Footer";
 import { Link } from "react-router-dom";
 import api from "../utils/api";
 
+import a1 from "../assets/product1.jpg";
+import a2 from "../assets/product2.jpg";
+import a3 from "../assets/product3.jpg";
+import a4 from "../assets/product4.jpg";
+
+/* CATEGORIES */
 const categories = [
   "All",
   "Bags",
@@ -15,6 +21,50 @@ const categories = [
   "Rings",
   "Chains",
   "Specs",
+];
+
+/* ACCESSORIES DATA */
+export const accessoriesData = [
+  {
+    id: 1,
+    img: a1,
+    name: "Cute Floral Hairband",
+    price: 299,
+    category: "Hairbands",
+    stock: true,
+    description:
+      "Soft elastic floral hairband perfect for daily wear and parties.",
+  },
+  {
+    id: 2,
+    img: a2,
+    name: "Mini Kids Backpack",
+    price: 799,
+    category: "Stockings",
+    stock: true,
+    description:
+      "Lightweight mini backpack ideal for school and outings.",
+  },
+  {
+    id: 3,
+    img: a3,
+    name: "Kids Fashion Specs",
+    price: 399,
+    category: "Specs",
+    stock: false,
+    description:
+      "Stylish fashion glasses made with safe plastic frame.",
+  },
+  {
+    id: 4,
+    img: a4,
+    name: "Soft Cotton Socks",
+    price: 199,
+    category: "Socks",
+    stock: true,
+    description:
+      "Premium breathable cotton socks for everyday comfort.",
+  },
 ];
 
 const Accessories = () => {
@@ -51,13 +101,13 @@ const Accessories = () => {
     <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
 
-      {/* TITLE */}
       <section className="px-6 md:px-24 pt-14">
         <h1 className="text-4xl font-serif mb-3">Accessories</h1>
         <div className="h-px bg-black/20" />
       </section>
 
-      {/* CATEGORY FILTER */}
+      {/* FILTER */}
+      
       <section className="px-6 md:px-24 py-6 flex gap-3 overflow-x-auto">
         {categories.map((cat) => (
           <button
@@ -74,49 +124,32 @@ const Accessories = () => {
         ))}
       </section>
 
-      {/* PRODUCTS */}
-      <section className="px-6 md:px-24 pb-24 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          filteredItems.length === 0 ? (
-            <div className="col-span-full text-center text-gray-500">No accessories found.</div>
-          ) : (
-            filteredItems.map((item) => (
-              <div key={item._id} className="text-center group">
-                <div className="relative">
-                  <Link to={`/product/${item._id}`}>
-                    <img
-                      src={item.image || "https://via.placeholder.com/300"}
-                      alt={item.name}
-                      className={`w-full h-60 object-cover rounded-2xl mb-3 ${(!item.stock || item.stock <= 0) && "opacity-60"
-                        }`}
-                    />
-                  </Link>
-
-                  {(!item.stock || item.stock <= 0) && (
-                    <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
-                      Out of Stock
-                    </span>
-                  )}
-                </div>
-
-                <h3 className="font-medium text-lg">{item.name}</h3>
-                <p className="text-gray-600">₹{item.price}</p>
-
-                <Link
-                  to={`/product/${item._id}`}
-                  className={`inline-block px-5 py-2 rounded-full text-sm transition mt-2
-                  ${item.stock > 0
-                      ? "bg-[#c6ab9a] hover:opacity-90"
-                      : "bg-gray-400 cursor-not-allowed pointer-events-none"
-                    }`}
-                >
-                  View Details
-                </Link>
+      {/* GRID */}
+      <section className="px-6 md:px-24 pb-28 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+        {filteredItems.map((item) => (
+          <div key={item.id} className="text-center group">
+            <Link to={`/accessories/${item.id}`}>
+              <div className="relative mb-3">
+                <img
+                  src={item.img}
+                  alt={item.name}
+                  className={`w-full aspect-[3/4] object-cover rounded-2xl transition group-hover:scale-105 duration-300 ${
+                    !item.stock && "opacity-60"
+                  }`}
+                />
+                {!item.stock && (
+                  <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
+                    Out of Stock
+                  </span>
+                )}
               </div>
-            ))
-          ))}
+            </Link>
+
+            <h3 className="text-sm font-medium">{item.name}</h3>
+            <p className="text-sm font-semibold mt-1">₹{item.price}</p>
+            <p className="text-xs text-black/60 mt-1">{item.category}</p>
+          </div>
+        ))}
       </section>
 
       <Footer />
