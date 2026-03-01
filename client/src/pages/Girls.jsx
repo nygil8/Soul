@@ -10,7 +10,7 @@ import g3 from "../assets/product3.jpg";
 import g4 from "../assets/product4.jpg";
 
 /* AGE GROUPS */
-const ageTabs = ["0-2 Years", "2-6 Years", "7-12 Years"];
+const ageTabs = ["0-1 Years", "1-6 Years", "7-12 Years"];
 
 /* CATEGORIES */
 const categories = [
@@ -30,7 +30,7 @@ const products = [
     img: g1,
     name: "Floral Cotton Frock",
     price: "₹1,299",
-    age: "0-2 Years",
+    age: "0-1 Years",
     category: "Frocks",
     stock: true,
   },
@@ -39,7 +39,7 @@ const products = [
     img: g2,
     name: "Peach Party Dress",
     price: "₹1,899",
-    age: "0-2 Years",
+    age: "0-1 Years",
     category: "Party Wear",
     stock: true,
   },
@@ -48,7 +48,7 @@ const products = [
     img: g3,
     name: "Denim Skirt Set",
     price: "₹1,499",
-    age: "2-6 Years",
+    age: "1-6 Years",
     category: "Skirts",
     stock: false,
   },
@@ -64,7 +64,7 @@ const products = [
 ];
 
 const Girls = () => {
-  const [activeAge, setActiveAge] = useState("0-2 Years");
+  const [activeAge, setActiveAge] = useState("0-1 Years");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
 

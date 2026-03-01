@@ -9,7 +9,7 @@ import p2 from "../assets/product2.jpg";
 import p3 from "../assets/product3.jpg";
 import p4 from "../assets/product4.jpg";
 
-const ageTabs = ["0-2 Years", "2-6 Years", "7-12 Years"];
+const ageTabs = ["0-1 Years", "1-6 Years", "7-12 Years"];
 
 const categories = [
   "All",
@@ -26,7 +26,7 @@ const products = [
   {
     id: 1,
     img: p1,
-    age: "0-2 Years",
+    age: "0-1 Years",
     category: "Combo",
     name: "Soft Cotton Combo Set",
     price: 1499,
@@ -35,7 +35,7 @@ const products = [
   {
     id: 2,
     img: p2,
-    age: "0-2 Years",
+    age: "0-1 Years",
     category: "Shirt",
     name: "Classic Linen Shirt",
     price: 899,
@@ -44,7 +44,7 @@ const products = [
   {
     id: 3,
     img: p3,
-    age: "2-6 Years",
+    age: "1-6 Years",
     category: "Hoodies",
     name: "Warm Winter Hoodie",
     price: 1299,
@@ -62,7 +62,7 @@ const products = [
 ];
 
 const Boys = () => {
-  const [activeAge, setActiveAge] = useState("0-2 Years");
+  const [activeAge, setActiveAge] = useState("0-1 Years");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
 
