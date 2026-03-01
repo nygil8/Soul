@@ -100,29 +100,13 @@ const ShoesDetails = () => {
       <section className="px-6 md:px-28 py-20 grid md:grid-cols-2 gap-24">
 
         {/* LEFT SIDE */}
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
 
-          {/* Thumbnails */}
-          <div className="flex flex-col gap-4">
-            {images.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt="thumb"
-                onClick={() => setSelectedImage(img)}
-                className={`w-24 h-24 object-cover rounded-xl cursor-pointer transition
-                ${selectedImage === img
-                    ? "scale-105"
-                    : "opacity-70 hover:opacity-100"}`}
-              />
-            ))}
-          </div>
-
-          {/* Main Image */}
+          {/* MAIN IMAGE - TOP ON MOBILE */}
           <div
             onClick={() => setZoomActive(!zoomActive)}
             onMouseMove={handleZoomMove}
-            className="w-[700px] h-[700px] bg-white rounded-3xl overflow-hidden cursor-zoom-in"
+            className="order-1 md:order-2 w-full md:w-[700px] h-[400px] md:h-[700px] bg-white rounded-3xl overflow-hidden cursor-zoom-in"
             style={{
               backgroundImage: zoomActive ? `url(${selectedImage})` : "none",
               backgroundPosition: backgroundPos,
@@ -134,11 +118,31 @@ const ShoesDetails = () => {
               <img
                 src={selectedImage}
                 alt={product.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
               />
             )}
           </div>
 
+          {/* THUMBNAILS */}
+          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-4">
+            {images.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt="thumb"
+                onClick={() => {
+                  setSelectedImage(img);
+                  setZoomActive(false);
+                }}
+                className={`w-24 h-24 object-cover rounded-xl cursor-pointer transition
+                ${
+                  selectedImage === img
+                    ? "scale-105"
+                    : "opacity-70 hover:opacity-100"
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
         {/* RIGHT SIDE */}
@@ -165,7 +169,6 @@ const ShoesDetails = () => {
             </p>
           </div>
 
-          {/* SIZE */}
           <div>
             <p className="uppercase text-xs tracking-widest text-black/50 mb-6">
               Choose Size
@@ -177,9 +180,11 @@ const ShoesDetails = () => {
                   key={size}
                   onClick={() => setSelectedSize(size)}
                   className={`p-5 rounded-2xl text-left transition
-                  ${selectedSize === size
+                  ${
+                    selectedSize === size
                       ? "bg-[#d8c4b6]"
-                      : "bg-white hover:shadow-lg"}`}
+                      : "bg-white hover:shadow-lg"
+                  }`}
                 >
                   <p className="font-semibold text-base">EU {size}</p>
                   <p className="text-sm text-black/70">
@@ -193,7 +198,6 @@ const ShoesDetails = () => {
             </div>
           </div>
 
-          {/* QUANTITY */}
           <div className="flex items-center gap-8">
             <button
               onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -212,7 +216,6 @@ const ShoesDetails = () => {
             </button>
           </div>
 
-          {/* ADD TO CART */}
           <button
             onClick={handleAddToCart}
             className="w-full py-5 rounded-full bg-[#bfa89e] hover:bg-[#a78f85] text-white transition text-xl"

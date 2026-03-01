@@ -119,10 +119,31 @@ const ClothingDetails = () => {
 
         {/* LEFT SIDE */}
 
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
 
-          {/* Thumbnails */}
-          <div className="flex flex-col gap-4">
+          {/* MAIN IMAGE - TOP ON MOBILE */}
+          <div
+            onClick={() => setZoomActive(!zoomActive)}
+            onMouseMove={handleZoomMove}
+            className="order-1 md:order-2 w-full md:w-[700px] h-[400px] md:h-[700px] bg-white rounded-3xl overflow-hidden cursor-zoom-in shadow-sm"
+            style={{
+              backgroundImage: zoomActive ? `url(${selectedImage})` : "none",
+              backgroundPosition: backgroundPos,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: zoomActive ? "220%" : "100%",
+            }}
+          >
+            {!zoomActive && (
+              <img
+                src={selectedImage}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+
+          {/* THUMBNAILS */}
+          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-4">
             {product.images.map((img, index) => (
               <img
                 key={index}
@@ -140,27 +161,6 @@ const ClothingDetails = () => {
                 }`}
               />
             ))}
-          </div>
-
-          {/* Main Image */}
-          <div
-            onClick={() => setZoomActive(!zoomActive)}
-            onMouseMove={handleZoomMove}
-            className="w-[600px] h-[600px] bg-white rounded-3xl overflow-hidden cursor-zoom-in shadow-sm"
-            style={{
-              backgroundImage: zoomActive ? `url(${selectedImage})` : "none",
-              backgroundPosition: backgroundPos,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: zoomActive ? "220%" : "contain",
-            }}
-          >
-            {!zoomActive && (
-              <img
-                src={selectedImage}
-                alt={product.name}
-                className="w-full h-full object-contain"
-              />
-            )}
           </div>
         </div>
 
@@ -191,8 +191,6 @@ const ClothingDetails = () => {
 
           {product.inStock && (
             <>
-              {/* SMALL SIZE BOXES */}
-
               <div>
                 <p className="uppercase text-xs tracking-widest text-black/50 mb-4">
                   Select Size
@@ -220,8 +218,6 @@ const ClothingDetails = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Quantity */}
 
               <div className="flex items-center gap-6">
                 <button

@@ -104,29 +104,13 @@ const AccessoriesDetails = () => {
       <section className="px-6 md:px-28 py-20 grid md:grid-cols-2 gap-24">
 
         {/* LEFT SIDE */}
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
 
-          {/* Thumbnails */}
-          <div className="flex flex-col gap-4">
-            {images.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt="thumb"
-                onClick={() => setSelectedImage(img)}
-                className={`w-24 h-24 object-cover rounded-xl cursor-pointer transition
-                ${selectedImage === img
-                    ? "scale-105"
-                    : "opacity-70 hover:opacity-100"}`}
-              />
-            ))}
-          </div>
-
-          {/* Main Image (Same Zoom System as Shoes) */}
+          {/* MAIN IMAGE */}
           <div
             onClick={() => setZoomActive(!zoomActive)}
             onMouseMove={handleZoomMove}
-            className="w-[700px] h-[700px] bg-white rounded-3xl overflow-hidden cursor-zoom-in"
+            className="order-1 md:order-2 w-full md:w-[700px] h-[400px] md:h-[700px] bg-white rounded-3xl overflow-hidden cursor-zoom-in"
             style={{
               backgroundImage: zoomActive
                 ? `url(${selectedImage})`
@@ -140,16 +124,31 @@ const AccessoriesDetails = () => {
               <img
                 src={selectedImage}
                 alt={product.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"  
               />
             )}
+          </div>
+
+          {/* THUMBNAILS */}
+          <div className="order-2 md:order-1 flex flex-row md:flex-col gap-4">
+            {images.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt="thumb"
+                onClick={() => setSelectedImage(img)}
+                className={`w-24 h-24 object-cover rounded-xl cursor-pointer transition
+                ${selectedImage === img
+                    ? "scale-105"
+                    : "opacity-70 hover:opacity-100"}`}
+              />
+            ))}
           </div>
         </div>
 
         {/* RIGHT SIDE */}
         <div className="space-y-12">
 
-          {/* Back Button SAME POSITION */}
           <button
             onClick={() => navigate(-1)}
             className="text-sm text-black/60 hover:text-black"
@@ -171,7 +170,6 @@ const AccessoriesDetails = () => {
             </p>
           </div>
 
-          {/* STOCKINGS SIZE */}
           {product.category === "Stockings" && (
             <>
               <div>
@@ -183,9 +181,7 @@ const AccessoriesDetails = () => {
                   {stockingSizes.map((size) => (
                     <button
                       key={size.label}
-                      onClick={() =>
-                        setSelectedSize(size.label)
-                      }
+                      onClick={() => setSelectedSize(size.label)}
                       className={`p-5 rounded-2xl text-left transition
                       ${selectedSize === size.label
                           ? "bg-[#d8c4b6]"
@@ -202,7 +198,6 @@ const AccessoriesDetails = () => {
                 </div>
               </div>
 
-              {/* COLOR */}
               <div>
                 <p className="uppercase text-xs tracking-widest text-black/50 mb-6">
                   Choose Color
@@ -212,9 +207,7 @@ const AccessoriesDetails = () => {
                   {stockingColors.map((color) => (
                     <button
                       key={color}
-                      onClick={() =>
-                        setSelectedColor(color)
-                      }
+                      onClick={() => setSelectedColor(color)}
                       className={`px-6 py-3 rounded-full transition
                       ${selectedColor === color
                           ? "bg-[#d8c4b6]"
@@ -228,7 +221,6 @@ const AccessoriesDetails = () => {
             </>
           )}
 
-          {/* SOCKS */}
           {product.category === "Socks" && (
             <div>
               <p className="uppercase text-xs tracking-widest text-black/50 mb-6">
@@ -252,7 +244,6 @@ const AccessoriesDetails = () => {
             </div>
           )}
 
-          {/* QUANTITY */}
           <div className="flex items-center gap-8">
             <button
               onClick={() =>
@@ -274,47 +265,12 @@ const AccessoriesDetails = () => {
             </button>
           </div>
 
-          {/* ADD TO CART */}
           <button
             onClick={handleAddToCart}
             className="w-full py-5 rounded-full bg-[#bfa89e] hover:bg-[#a78f85] text-white transition text-xl"
           >
             Add to Cart
           </button>
-        </div>
-      </section>
-
-      {/* SIMILAR PRODUCTS */}
-      <section className="px-6 md:px-28 pb-24">
-        <h2 className="text-3xl font-serif mb-12">
-          Similar Products
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-          {similarProducts.map((item) => (
-            <div
-              key={item.id}
-              onClick={() =>
-                navigate(`/accessories/${item.id}`)
-              }
-              className="cursor-pointer group"
-            >
-              <div className="rounded-2xl overflow-hidden mb-4 bg-white shadow-sm group-hover:shadow-xl transition">
-                <img
-                  src={item.img}
-                  alt={item.name}
-                  className="w-full h-60 object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-
-              <p className="text-base font-medium">
-                {item.name}
-              </p>
-              <p className="text-sm text-black/60">
-                ₹{item.price}
-              </p>
-            </div>
-          ))}
         </div>
       </section>
 

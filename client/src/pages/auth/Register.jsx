@@ -1,17 +1,46 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#fdf0e3] text-gray-900">
 
       {/* Header */}
       <header className="bg-[#f3efe3] border-b">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-semibold tracking-widest">E-KID</h1>
+          <h1
+            onClick={() => navigate("/")}
+            className="text-xl font-semibold tracking-widest cursor-pointer"
+          >
+            E-KID
+          </h1>
+
           <nav className="flex gap-6 text-lg">
-            <span className="cursor-pointer">🔍</span>
-            <span className="cursor-pointer">👤</span>
-            <span className="cursor-pointer">🛒</span>
+            <span
+              onClick={() => navigate("/search")}
+              className="cursor-pointer"
+            >
+              🔍
+            </span>
+
+            <span
+              onClick={() => navigate("/login")}
+              className="cursor-pointer"
+            >
+              👤
+            </span>
+
+            <span
+              onClick={() => navigate("/cart")}
+              className="cursor-pointer"
+            >
+              🛒
+            </span>
           </nav>
         </div>
       </header>
@@ -23,11 +52,13 @@ const Register = () => {
           <h2 className="text-3xl font-semibold text-center mb-2">
             Create Account
           </h2>
+
           <p className="text-center text-sm text-gray-600 mb-10">
             Join E-KID to explore the latest kids fashion
           </p>
 
           <form className="space-y-6">
+
             {/* Username */}
             <div>
               <label className="block text-sm mb-1">Username</label>
@@ -88,26 +119,62 @@ const Register = () => {
             >
               Register
             </button>
+
           </form>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="bg-[#b79a89] py-14">
+
         <div className="max-w-6xl mx-auto text-center space-y-4 text-lg">
-          <p>Home</p>
-          <p>About Us</p>
-          <p>Contact Us</p>
-          <p>My Account</p>
-          <p>Refund Policy</p>
-          <p>Privacy Policy</p>
-          <p>Shipping Policy</p>
+
+          <Link to="/" className="block hover:underline">
+            Home
+          </Link>
+
+          <Link to="/about" className="block hover:underline">
+            About Us
+          </Link>
+
+          <Link to="/contact" className="block hover:underline">
+            Contact Us
+          </Link>
+
+          <Link to="/my-account" className="block hover:underline">
+            My Account
+          </Link>
+
+          <Link to="/refund-policy" className="block hover:underline">
+            Refund Policy
+          </Link>
+
+          <Link to="/privacy-policy" className="block hover:underline">
+            Privacy Policy
+          </Link>
+
+          <Link to="/shipping-policy" className="block hover:underline">
+            Shipping Policy
+          </Link>
+
         </div>
 
+        {/* Social Icons */}
         <div className="flex justify-center gap-6 mt-8 text-2xl">
-          <span>📸</span>
-          <span>🌐</span>
+          <span className="cursor-pointer">📸</span>
+          <span className="cursor-pointer">🌐</span>
         </div>
+
+        {/* Scroll Top */}
+        <div className="flex justify-end pr-6 mt-6">
+          <span
+            onClick={scrollToTop}
+            className="text-2xl cursor-pointer hover:scale-110 transition"
+          >
+            ⬆
+          </span>
+        </div>
+
       </footer>
     </div>
   );
