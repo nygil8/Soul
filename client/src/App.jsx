@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
 
 /* USER */
 import Home from "./pages/Home";
@@ -15,6 +17,13 @@ import Girls from "./pages/Girls";
 import Shoes from "./pages/Shoes";
 import Accessories from "./pages/Accessories";
 import ProductDetails from "./pages/ProductDetails";
+import Search from "./pages/Search";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/CheckOut";
+import Payment from "./pages/Payment";
+import OrderSuccess from "./pages/OrderSuccess";
+import OrderFailed from "./pages/OrderFailed";
+import NotFound from "./pages/NotFound";
 /* ADMIN */
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -27,7 +36,7 @@ import Profile from "./components/Profile";
 
 
 function AnimatedRoutes() {
-  const location = useLocations();
+  const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
@@ -39,6 +48,10 @@ function AnimatedRoutes() {
         <Route path="/shoes" element={<Shoes />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/Product/:id" element={<ProductDetails />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<UserLogin />} />

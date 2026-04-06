@@ -10,6 +10,18 @@ const Search = () => {
     const keyword = searchParams.get("keyword");
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [sortOrder, setSortOrder] = useState("latest");
+
+    const sortedProducts = [...products].sort((a, b) => {
+        if (sortOrder === "priceAsc") return a.price - b.price;
+        if (sortOrder === "priceDesc") return b.price - a.price;
+        if (sortOrder === "latest") {
+            const idA = a._id || a.id;
+            const idB = b._id || b.id;
+            if (idA && idB) return idB.toString().localeCompare(idA.toString());
+        }
+        return 0;
+    });
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -36,10 +48,29 @@ const Search = () => {
             <Navbar />
 
             <section className="px-6 md:px-24 py-10">
-                <h1 className="text-3xl font-serif mb-2">Search Results</h1>
-                <p className="text-gray-500 mb-8">
-                    {keyword ? `Showing results for "${keyword}"` : "All Products"}
-                </p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h1 className="text-3xl font-serif mb-2">Search Results</h1>
+                        <p className="text-gray-500">
+                            {keyword ? `Showing results for "${keyword}"` : "All Products"}
+                        </p>
+                    </div>
+
+                    {!loading && products.length > 0 && (
+                        <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-sm font-medium">Sort:</span>
+                            <select 
+                                value={sortOrder} 
+                                onChange={(e) => setSortOrder(e.target.value)}
+                                className="border border-black/20 rounded-full px-4 py-1.5 text-sm bg-transparent outline-none cursor-pointer focus:border-black/40"
+                            >
+                                <option value="latest">Latest</option>
+                                <option value="priceAsc">Price: Low to High</option>
+                                <option value="priceDesc">Price: High to Low</option>
+                            </select>
+                        </div>
+                    )}
+                </div>
 
                 {loading ? (
                     <ProductSkeleton count={8} />
@@ -51,7 +82,7 @@ const Search = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        {products.map((item) => (
+                        {sortedProducts.map((item) => (
                             <div key={item._id} className="text-center group bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition">
                                 <Link to={`/product/${item._id}`}>
                                     <div className="relative overflow-hidden rounded-xl mb-4">

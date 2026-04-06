@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../utils/api";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,12 +10,33 @@ const Login = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await api.post("/auth/login", formData);
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        toast.success("Login successful!");
+        if (res.data.user.role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Login failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#fdf0e3] text-black">
-      
+
       {/* Header */}
       <header className="bg-[#f3efe3] py-4 px-6 flex justify-between items-center">
-        <h1 
+        <h1
           onClick={() => navigate("/")}
           className="text-xl font-semibold tracking-widest cursor-pointer"
         >
@@ -21,13 +44,13 @@ const Login = () => {
         </h1>
         <div className="flex gap-5 text-xl">
           <span className="cursor-pointer">🔍</span>
-          <span 
+          <span
             onClick={() => navigate("/login")}
             className="cursor-pointer"
           >
             👤
           </span>
-          <span 
+          <span
             onClick={() => navigate("/cart")}
             className="cursor-pointer"
           >

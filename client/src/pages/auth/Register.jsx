@@ -1,10 +1,48 @@
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../utils/api";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  const { username, email, password, confirmPassword } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await api.post("/auth/register", { username, email, password });
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        toast.success("Account created successfully!");
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,7 +95,7 @@ const Register = () => {
             Join E-KID to explore the latest kids fashion
           </p>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={onSubmit}>
 
             {/* Username */}
             <div>

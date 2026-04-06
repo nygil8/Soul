@@ -30,6 +30,7 @@ const Boys = () => {
   const [activeAge, setActiveAge] = useState("0-2 Yrs");
   const [activeCategory, setActiveCategory] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState("latest");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,6 +59,17 @@ const Boys = () => {
       (activeCategory === "All" || p.category === activeCategory)
   );
 
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOrder === "priceAsc") return a.price - b.price;
+    if (sortOrder === "priceDesc") return b.price - a.price;
+    if (sortOrder === "latest") {
+      const idA = a._id || a.id;
+      const idB = b._id || b.id;
+      return idB.toString().localeCompare(idA.toString());
+    }
+    return 0;
+  });
+
   return (
     <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
@@ -68,21 +80,36 @@ const Boys = () => {
         <div className="h-px bg-black/20" />
       </section>
 
-      {/* AGE TABS */}
-      <section className="px-6 md:px-24 py-6 flex gap-3 overflow-x-auto">
-        {ageTabs.map((age) => (
-          <button
-            key={age}
-            onClick={() => setActiveAge(age)}
-            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
-              ${activeAge === age
-                ? "bg-[#c6ab9a] text-white"
-                : "bg-[#eee4d7]"
-              }`}
+      {/* AGE TABS & SORT */}
+      <section className="px-6 md:px-24 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex gap-3 overflow-x-auto max-w-full pb-2 md:pb-0">
+          {ageTabs.map((age) => (
+            <button
+              key={age}
+              onClick={() => setActiveAge(age)}
+              className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
+                ${activeAge === age
+                  ? "bg-[#c6ab9a] text-white"
+                  : "bg-[#eee4d7]"
+                }`}
+            >
+              {age}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-sm font-medium">Sort:</span>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="border border-black/20 rounded-full px-4 py-1.5 text-sm bg-transparent outline-none cursor-pointer focus:border-black/40"
           >
-            {age}
-          </button>
-        ))}
+            <option value="latest">Latest</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+        </div>
       </section>
 
       {/* MOBILE FILTER HEADER */}
@@ -153,7 +180,7 @@ const Boys = () => {
 
         {/* PRODUCTS GRID */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10">
-          {filteredProducts.map((item) => (
+          {sortedProducts.map((item) => (
             <div key={item.id} className="group text-center">
               
               {/* IMAGE */}

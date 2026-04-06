@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RazorPayButton = ({ amount }) => {
   const navigate = useNavigate();
+  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -11,14 +13,60 @@ const RazorPayButton = ({ amount }) => {
     document.body.appendChild(script);
   }, []);
 
+  const handleSuccess = (paymentId) => {
+    console.log("Payment Success ID:", paymentId);
+
+    // GET CART ITEMS
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // CREATE ORDER OBJECT
+    const newOrder = {
+      id: Date.now(),
+      status: "Paid",
+      date: new Date().toLocaleDateString(),
+      total: amount,
+      paymentId: paymentId,
+      items: cartItems
+    };
+
+    // GET EXISTING ORDERS
+    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    // SAVE NEW ORDER
+    localStorage.setItem(
+      "orders",
+      JSON.stringify([...existingOrders, newOrder])
+    );
+
+    // CLEAR CART AFTER SUCCESS
+    localStorage.removeItem("cart");
+
+    // NAVIGATE TO SUCCESS PAGE
+    navigate("/order-success", {
+      state: {
+        success: true,
+        paymentId: paymentId
+      }
+    });
+  };
+
   const handlePayment = () => {
+    // If no valid Razorpay key is provided, simulate a successful payment for testing purposes.
+    if (!razorpayKey || razorpayKey === "YOUR_RAZORPAY_KEY_ID") {
+      toast.success("Test Mode: Simulating successful payment...");
+      setTimeout(() => {
+        handleSuccess(`mock_pay_${Date.now()}`);
+      }, 1500);
+      return;
+    }
+
     if (!window.Razorpay) {
-      alert("Razorpay SDK not loaded. Please refresh.");
+      toast.error("Razorpay SDK not loaded. Please refresh.");
       return;
     }
 
     const options = {
-      key: "YOUR_RAZORPAY_KEY_ID",
+      key: razorpayKey,
       amount: amount * 100,
       currency: "INR",
       name: "E-KID",
@@ -27,44 +75,10 @@ const RazorPayButton = ({ amount }) => {
 
       // SUCCESS HANDLER
       handler: function (response) {
-        console.log("Payment Success:", response);
-
-        // GET CART ITEMS
-        const cartItems =
-          JSON.parse(localStorage.getItem("cart")) || [];
-
-        // CREATE ORDER OBJECT
-        const newOrder = {
-          id: Date.now(),
-          status: "Paid",
-          date: new Date().toLocaleDateString(),
-          total: amount,
-          paymentId: response.razorpay_payment_id,
-          items: cartItems
-        };
-
-        //  GET EXISTING ORDERS
-        const existingOrders =
-          JSON.parse(localStorage.getItem("orders")) || [];
-
-        //  SAVE NEW ORDER
-        localStorage.setItem(
-          "orders",
-          JSON.stringify([...existingOrders, newOrder])
-        );
-
-        //   CART AFTER SUCCESS
-        localStorage.removeItem("cart");
-
-        // NAVIGATE TO SUCCESS PAGE
-        navigate("/order-success", {
-          state: {
-            paymentId: response.razorpay_payment_id
-          }
-        });
+        handleSuccess(response.razorpay_payment_id);
       },
 
-      //  PAYMENT FAILED
+      // PAYMENT FAILED
       modal: {
         ondismiss: function () {
           navigate("/order-failed");

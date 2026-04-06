@@ -71,6 +71,7 @@ const Accessories = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [sortOrder, setSortOrder] = useState("latest");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -97,6 +98,17 @@ const Accessories = () => {
     activeCategory === "All" || p.category === activeCategory
   );
 
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    if (sortOrder === "priceAsc") return a.price - b.price;
+    if (sortOrder === "priceDesc") return b.price - a.price;
+    if (sortOrder === "latest") {
+      const idA = a._id || a.id;
+      const idB = b._id || b.id;
+      return idB.toString().localeCompare(idA.toString());
+    }
+    return 0;
+  });
+
   return (
     <div className="bg-[#f7f1e8] min-h-screen text-[#2b2b2b]">
       <Navbar />
@@ -106,27 +118,41 @@ const Accessories = () => {
         <div className="h-px bg-black/20" />
       </section>
 
-      {/* FILTER */}
-      
-      <section className="px-6 md:px-24 py-6 flex gap-3 overflow-x-auto">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
-              ${activeCategory === cat
-                ? "bg-[#c6ab9a] text-white"
-                : "bg-[#eee4d7]"
-              }`}
+      {/* FILTER & SORT */}
+      <section className="px-6 md:px-24 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex gap-3 overflow-x-auto max-w-full pb-2 md:pb-0">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-5 py-2 rounded-full text-sm whitespace-nowrap transition
+                ${activeCategory === cat
+                  ? "bg-[#c6ab9a] text-white"
+                  : "bg-[#eee4d7]"
+                }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-sm font-medium">Sort:</span>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="border border-black/20 rounded-full px-4 py-1.5 text-sm bg-transparent outline-none cursor-pointer focus:border-black/40"
           >
-            {cat}
-          </button>
-        ))}
+            <option value="latest">Latest</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+          </select>
+        </div>
       </section>
 
       {/* GRID */}
       <section className="px-6 md:px-24 pb-28 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-        {filteredItems.map((item) => (
+        {sortedItems.map((item) => (
           <div key={item.id} className="text-center group">
             <Link to={`/accessories/${item.id}`}>
               <div className="relative mb-3">

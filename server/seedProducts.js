@@ -11,7 +11,7 @@ const products = [
         price: 499,
         category: "Shirt",
         stock: 10,
-        image: "https://images.unsplash.com/photo-1622290291314-ec15e966ce94?auto=format&fit=crop&q=80&w=1000",
+        image: "https://images.unsplash.com/photo-1513364776144-60967f0f7f45?auto=format&fit=crop&q=80&w=1000",
         gender: "Boys",
         ageType: "3-6 Yrs"
     },

@@ -1,0 +1,76 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - button "☰" [ref=e5]
+    - link "E-KID" [ref=e6] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - textbox "Search..." [ref=e9]
+        - generic: 🔍
+      - link "User Account" [ref=e10] [cursor=pointer]:
+        - /url: /login
+        - text: 👤
+      - link "Shopping Cart" [ref=e11] [cursor=pointer]:
+        - /url: /cart
+        - text: 🛒
+  - generic [ref=e12]:
+    - heading "Your Cart" [level=1] [ref=e13]
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img "Cute Floral Hairband" [ref=e18]
+            - generic [ref=e19]:
+              - heading "Cute Floral Hairband" [level=2] [ref=e20]
+              - paragraph [ref=e21]: ₹299
+              - generic [ref=e22]:
+                - button "−" [ref=e23]
+                - generic [ref=e24]: "1"
+                - button "+" [ref=e25]
+              - button "Remove" [ref=e26]
+          - generic [ref=e27]: ₹299
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - img "Mini Kids Backpack" [ref=e30]
+            - generic [ref=e31]:
+              - heading "Mini Kids Backpack" [level=2] [ref=e32]
+              - paragraph [ref=e33]: ₹799
+              - generic [ref=e34]:
+                - button "−" [ref=e35]
+                - generic [ref=e36]: "2"
+                - button "+" [ref=e37]
+              - button "Remove" [ref=e38]
+          - generic [ref=e39]: ₹1598
+      - generic [ref=e40]:
+        - heading "Order Summary" [level=2] [ref=e41]
+        - generic [ref=e42]:
+          - generic [ref=e43]: Subtotal
+          - generic [ref=e44]: ₹1897
+        - generic [ref=e45]:
+          - generic [ref=e46]: Shipping
+          - generic [ref=e47]: Calculated at checkout
+        - button "Proceed to Checkout" [ref=e48]
+  - contentinfo [ref=e49]:
+    - generic [ref=e50]:
+      - link "Home" [ref=e51] [cursor=pointer]:
+        - /url: /
+      - link "About Us" [ref=e52] [cursor=pointer]:
+        - /url: /about
+      - link "Contact Us" [ref=e53] [cursor=pointer]:
+        - /url: /contact
+      - link "My Account" [ref=e54] [cursor=pointer]:
+        - /url: /my-account
+      - link "Refund Policy" [ref=e55] [cursor=pointer]:
+        - /url: /refund-policy
+      - link "Privacy Policy" [ref=e56] [cursor=pointer]:
+        - /url: /privacy-policy
+      - link "Shipping Policy" [ref=e57] [cursor=pointer]:
+        - /url: /shipping-policy
+    - generic [ref=e58]:
+      - generic [ref=e59] [cursor=pointer]: 📸
+      - generic [ref=e60] [cursor=pointer]: 🌐
+    - generic [ref=e61] [cursor=pointer]: ⬆
+```

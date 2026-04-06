@@ -67,8 +67,6 @@ const AccountDetails = () => {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
 
-  if (loading) return <div>Loading profile...</div>;
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 900);
@@ -77,6 +75,8 @@ const AccountDetails = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  if (loading) return <div>Loading profile...</div>;
 
   return (
     <div style={styles.page}>
